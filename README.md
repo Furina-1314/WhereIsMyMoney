@@ -13,8 +13,8 @@
 - [x] Phase 1: 仓库与工程骨架
 - [x] Phase 2: 数据层（SQLite schema、DatabaseManager、控制台自测 78 项）
 - [x] Phase 3: Fluent UI 基础框架与主布局（Win10 UWP/Groove 风格）
-- [ ] Phase 4: 记账核心（日历选日期、账目增删改查、类别/账户管理）
-- [ ] Phase 5: 查询与统计（周/月/自定义区间、图表）
+- [x] Phase 4: 记账核心（日历选日期、账目增删改查、类别/付款方式管理）
+- [x] Phase 5: 查询与统计（周/月/自定义区间、筛选、柱状图与分布图）
 - [ ] Phase 6: 预算（周预算、月预算、超支提示）
 - [ ] Phase 7: 打磨与发布
 

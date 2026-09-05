@@ -217,6 +217,12 @@ void DatabaseManager::seedSampleTransactions()
                        QStringLiteral("周末"), fun, wechat);
     if (shop > 0 && bank > 0)
         addTransaction(today.addDays(-3), Expense, 15600, QStringLiteral("超市采购"), QString(), shop, bank);
+    if (bus > 0 && alipay > 0)
+        addTransaction(today.addDays(-6), Expense, 4500, QStringLiteral("公交通勤"), QString(), bus, alipay);
+    if (shop > 0 && bank > 0)
+        addTransaction(today.addDays(-10), Expense, 8990, QStringLiteral("网购衣服"), QStringLiteral("换季"), shop, bank);
+    if (fun > 0 && wechat > 0)
+        addTransaction(today.addDays(-2), Expense, 3000, QStringLiteral("游戏充值"), QString(), fun, wechat);
 }
 
 QSqlQuery DatabaseManager::run(const QString &sql, const QVariantList &binds)

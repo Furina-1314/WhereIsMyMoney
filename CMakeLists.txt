@@ -52,6 +52,8 @@ qt_add_qml_module(WhereIsMyMoney
         src/qml/components/TransactionDialog.qml
         src/qml/components/ManageEntitiesDialog.qml
         src/qml/components/EntityManagePanel.qml
+        src/qml/components/DailyBars.qml
+        src/qml/components/BreakdownList.qml
         src/qml/pages/HomePage.qml
         src/qml/pages/StatsPage.qml
         src/qml/pages/BudgetPage.qml

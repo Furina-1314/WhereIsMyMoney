@@ -26,7 +26,7 @@ ApplicationWindow {
 
     // 应用内自测入口（WIMM_AUTOTEST=1 时由 main.cpp 调用）
     function runSelfTest() {
-        return homePage.runSelfTest() && settingsPage.runSelfTest()
+        return homePage.runSelfTest() && settingsPage.runSelfTest() && statsPage.runSelfTest()
     }
 
     // ===== 页面切换动画（UWP 入场：淡入 + 轻微上滑） =====
@@ -228,7 +228,7 @@ ApplicationWindow {
                 onCurrentIndexChanged: pageEnter.restart()
 
                 HomePage { id: homePage }
-                StatsPage {}
+                StatsPage { id: statsPage }
                 BudgetPage {}
                 SettingsPage { id: settingsPage }
             }
