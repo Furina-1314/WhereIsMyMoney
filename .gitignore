@@ -28,3 +28,6 @@ qrc_*.cpp
 # OS
 Thumbs.db
 .DS_Store
+deploy/
+build-release/
+WhereIsMyMoney-v0.1.0-win64.zip
