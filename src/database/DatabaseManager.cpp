@@ -7,6 +7,12 @@
 #include <QStandardPaths>
 #include <QUuid>
 
+// QML/C++ 传入的 null QString 会被绑定为 SQL NULL，统一规范化为空串
+static QString nz(const QString &s)
+{
+    return s.isNull() ? QStringLiteral("") : s;
+}
+
 // 单条账目行的字段映射（JOIN 类别/账户名称）
 static QVariantMap txRow(const QSqlQuery &q)
 {
@@ -33,7 +39,7 @@ static const QString kTxSelect = QStringLiteral(
     "JOIN categories c ON c.id = t.category_id "
     "JOIN accounts a ON a.id = t.account_id ");
 
-DatabaseManager::DatabaseManager(const QString &databasePath, QObject *parent)
+DatabaseManager::DatabaseManager(const QString &databasePath, QObject *parent, bool allowSeed)
     : QObject(parent)
 {
     QString path = databasePath;
@@ -59,7 +65,7 @@ DatabaseManager::DatabaseManager(const QString &databasePath, QObject *parent)
 
     if (!ensureSchema())
         return;
-    if (databasePath.isEmpty()) // 默认库（应用数据目录）才写入种子数据
+    if (allowSeed)
         seedDefaultsIfEmpty();
     m_open = true;
 }
@@ -327,7 +333,7 @@ int DatabaseManager::addAccount(const QString &name, const QString &note)
         return -1;
     }
     QSqlQuery q = run(QStringLiteral("INSERT INTO accounts(name, note) VALUES(?,?)"),
-                      {n, note.trimmed()});
+                      {n, nz(note).trimmed()});
     if (!q.isActive()) {
         if (m_lastError.contains(QLatin1String("UNIQUE")))
             m_lastError = QStringLiteral("同名账户已存在: %1").arg(n);
@@ -344,7 +350,7 @@ bool DatabaseManager::updateAccount(int id, const QString &name, const QString &
         return false;
     }
     QSqlQuery q = run(QStringLiteral("UPDATE accounts SET name=?, note=? WHERE id=?"),
-                      {n, note.trimmed(), id});
+                      {n, nz(note).trimmed(), id});
     if (!q.isActive()) {
         if (m_lastError.contains(QLatin1String("UNIQUE")))
             m_lastError = QStringLiteral("同名账户已存在: %1").arg(n);
@@ -416,7 +422,7 @@ int DatabaseManager::addTransaction(const QDate &date, int type, qint64 amountCe
                           "INSERT INTO transactions(date, type, amount, title, note, category_id, account_id) "
                           "VALUES(?,?,?,?,?,?,?)"),
                       {date.toString(Qt::ISODate), type, amountCents,
-                       title.trimmed(), note.trimmed(), categoryId, accountId});
+                       title.trimmed(), nz(note).trimmed(), categoryId, accountId});
     if (!q.isActive())
         return -1;
     return q.lastInsertId().toInt();
@@ -455,7 +461,7 @@ bool DatabaseManager::updateTransaction(int id, const QDate &date, int type, qin
                           "category_id=?, account_id=?, updated_at=datetime('now','localtime') "
                           "WHERE id=?"),
                       {date.toString(Qt::ISODate), type, amountCents,
-                       title.trimmed(), note.trimmed(), categoryId, accountId, id});
+                       title.trimmed(), nz(note).trimmed(), categoryId, accountId, id});
     return q.isActive() && q.numRowsAffected() > 0;
 }
 

@@ -11,6 +11,8 @@ Popup {
     property alias body: bodyColumn.data
     property string primaryText: qsTr("确定")
     property string secondaryText: qsTr("取消")
+    property bool closeOnPrimary: true
+    property bool closeOnSecondary: true
 
     signal accepted()
     signal rejected()
@@ -67,14 +69,22 @@ Popup {
                 Layout.fillWidth: true
                 text: control.secondaryText
                 visible: control.secondaryText !== ""
-                onClicked: { control.rejected(); control.close() }
+                onClicked: {
+                    control.rejected()
+                    if (control.closeOnSecondary)
+                        control.close()
+                }
             }
             FluentButton {
                 Layout.fillWidth: true
                 text: control.primaryText
                 primary: true
                 visible: control.primaryText !== ""
-                onClicked: { control.accepted(); control.close() }
+                onClicked: {
+                    control.accepted()
+                    if (control.closeOnPrimary)
+                        control.close()
+                }
             }
         }
     }

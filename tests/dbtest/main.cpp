@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
     qInstallMessageHandler(stderrHandler);
     QTemporaryDir tmp;
     CHECK(tmp.isValid(), "临时目录创建失败");
-    DatabaseManager db(tmp.filePath("test.sqlite"));
+    DatabaseManager db(tmp.filePath("test.sqlite"), nullptr, false); // 关闭种子数据
     CHECK(db.isOpen(), "数据库打开失败: " + db.lastError());
 
     // ---------- 类别 ----------

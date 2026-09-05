@@ -24,6 +24,11 @@ ApplicationWindow {
     color: Theme.bg
     font.family: Theme.fontFamily
 
+    // 应用内自测入口（WIMM_AUTOTEST=1 时由 main.cpp 调用）
+    function runSelfTest() {
+        return homePage.runSelfTest()
+    }
+
     // ===== 页面切换动画（UWP 入场：淡入 + 轻微上滑） =====
     SequentialAnimation {
         id: pageEnter
@@ -222,7 +227,7 @@ ApplicationWindow {
                 currentIndex: root.currentPage
                 onCurrentIndexChanged: pageEnter.restart()
 
-                HomePage {}
+                HomePage { id: homePage }
                 StatsPage {}
                 BudgetPage {}
                 SettingsPage {}

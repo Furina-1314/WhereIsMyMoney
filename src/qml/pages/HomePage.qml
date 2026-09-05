@@ -14,6 +14,7 @@ Page {
     property date selectedDate: today
     property date viewMonth: new Date(today.getFullYear(), today.getMonth(), 1)
     property int dataRevision: 0 // 数据变更后自增以刷新查询绑定
+    property var editingTx: null // null = 新增；否则为编辑中的账目
 
     // 生成月历格子：0 表示空位，其余为日期数字
     function monthCells(d) {
@@ -51,6 +52,19 @@ Page {
     }
 
     background: Rectangle { color: Theme.bg }
+
+    Component.onCompleted: {
+        // 测试辅助：启动即打开指定对话框（截图验收用）
+        const which = (typeof initialOpenDialog !== "undefined") ? initialOpenDialog : ""
+        if (which === "tx") {
+            editingTx = null
+            txDialog.open()
+        } else if (which === "cat") {
+            catManager.open()
+        } else if (which === "acc") {
+            accManager.open()
+        }
+    }
 
     // 月历翻月小按钮
     component MonthNavButton: Rectangle {
@@ -330,6 +344,38 @@ Page {
                     color: Theme.stroke
                 }
 
+                // 操作工具栏
+                RowLayout {
+                    Layout.fillWidth: true
+                    Layout.bottomMargin: Theme.spacingSmall
+                    spacing: Theme.spacingSmall
+
+                    FluentButton {
+                        text: qsTr("＋ 新增账目")
+                        primary: true
+                        onClicked: {
+                            page.editingTx = null
+                            txDialog.open()
+                        }
+                    }
+                    FluentButton {
+                        text: qsTr("类别管理")
+                        onClicked: catManager.open()
+                    }
+                    FluentButton {
+                        text: qsTr("付款方式管理")
+                        onClicked: accManager.open()
+                    }
+                    Item { Layout.fillWidth: true }
+                    Text {
+                        visible: txList.count > 0
+                        text: qsTr("点击账目可编辑")
+                        font.family: Theme.fontFamily
+                        font.pixelSize: 12
+                        color: Theme.textDisabled
+                    }
+                }
+
                 // 账目列表
                 ListView {
                     id: txList
@@ -433,11 +479,119 @@ Page {
                             anchors.fill: parent
                             hoverEnabled: true
                             cursorShape: Qt.PointingHandCursor
-                            // Phase 4b: 点击进入编辑
+                            onClicked: {
+                                page.editingTx = txItem.modelData
+                                txDialog.open()
+                            }
                         }
                     }
                 }
             }
         }
+    }
+
+    // ===== 对话框 =====
+    TransactionDialog {
+        id: txDialog
+        txDate: page.selectedDate
+        editData: page.editingTx
+        onSaved: page.dataRevision++
+        onDeleted: page.dataRevision++
+    }
+
+    ManageEntitiesDialog {
+        id: catManager
+        manageCategories: true
+        onChanged: {
+            page.dataRevision++
+            txDialog.revision++
+        }
+    }
+
+    ManageEntitiesDialog {
+        id: accManager
+        manageCategories: false
+        onChanged: {
+            page.dataRevision++
+            txDialog.revision++
+        }
+    }
+
+    // ----- 应用内自测（WIMM_AUTOTEST=1 时由 main.cpp 调用） -----
+    function runSelfTest() {
+        let pass = 0, fail = 0
+        function check(cond, msg) {
+            if (cond) { pass++ }
+            else { fail++; console.warn("SELFTEST FAIL:", msg) }
+        }
+
+        // --- 新增支出 ---
+        const before = dayTxList.length
+        const expenseBefore = daySummary.expenseCents
+        editingTx = null
+        txDialog.open()
+        txDialog.fill({ type: 0, title: "自测-午饭", amount: "23.45",
+                        category: "餐饮", account: "现金", note: "selftest" })
+        txDialog.save()
+        check(!txDialog.opened, "保存成功后对话框关闭（opened=false）")
+        check(dayTxList.length === before + 1, "新增后当日列表 +1")
+        check(daySummary.expenseCents === expenseBefore + 2345, "当日支出汇总 +23.45")
+
+        const mine = dayTxList.find(t => t.title === "自测-午饭")
+        check(mine !== undefined, "列表中找到新账目")
+        check(mine && mine.amountCents === 2345, "金额以分存储(2345)")
+
+        // --- 编辑金额 ---
+        editingTx = mine
+        txDialog.open()
+        txDialog.fill({ type: 0, title: "自测-午饭", amount: "99.99",
+                        category: "餐饮", account: "现金", note: "selftest" })
+        txDialog.save()
+        check(daySummary.expenseCents === expenseBefore + 9999, "编辑后支出汇总 +99.99")
+
+        // --- 类别管理 ---
+        catManager.open()
+        const catCount = catManager.entityList.length
+        catManager.addForTest("自测类别")
+        check(catManager.entityList.length === catCount + 1, "新建类别成功")
+        catManager.addForTest("自测类别")
+        check(catManager.entityList.length === catCount + 1, "重复类别被拒绝")
+        const lastIdx = catManager.entityList.length - 1
+        catManager.renameForTest(lastIdx, "自测类别改")
+        check(catManager.entityList[lastIdx].name === "自测类别改", "类别改名成功")
+        catManager.deleteForTest(lastIdx)
+        check(catManager.entityList.length === catCount, "删除未使用类别成功")
+        catManager.close()
+
+        // --- 付款方式管理 ---
+        accManager.open()
+        const accCount = accManager.entityList.length
+        accManager.addForTest("自测钱包")
+        check(accManager.entityList.length === accCount + 1,
+              "新建付款方式成功 err=" + accManager.errorText)
+        accManager.renameForTest(accManager.entityList.length - 1, "自测钱包2")
+        check(accManager.entityList[accManager.entityList.length - 1].name === "自测钱包2",
+              "付款方式改名成功")
+        accManager.deleteForTest(accManager.entityList.length - 1)
+        check(accManager.entityList.length === accCount, "删除未使用付款方式成功")
+        accManager.close()
+
+        // --- 删除账目（恢复现场） ---
+        editingTx = dayTxList.find(t => t.title === "自测-午饭")
+        txDialog.open()
+        txDialog.deleteForTest()
+        check(dayTxList.length === before, "删除账目后恢复原数量")
+        check(daySummary.expenseCents === expenseBefore, "删除后支出汇总恢复")
+
+        // --- 类型联动 ---
+        txDialog.open()
+        txDialog.fill({ type: 1, title: "x", amount: "1", category: "工资", account: "现金" })
+        check(txDialog.txType === 1, "切换到收入类型")
+        const incomeCats = DB.categories(1)
+        check(incomeCats.length > 0 && incomeCats[0].name === "工资", "收入类别下拉取收入类别")
+        txDialog.close()
+
+        console.info("SELFTEST RESULT pass=" + pass + " fail=" + fail)
+        return fail === 0
     }
 }

@@ -48,6 +48,9 @@ qt_add_qml_module(WhereIsMyMoney
         src/qml/components/FluentComboBox.qml
         src/qml/components/FluentDialog.qml
         src/qml/components/FluentScrollBar.qml
+        src/qml/components/FluentSegmented.qml
+        src/qml/components/TransactionDialog.qml
+        src/qml/components/ManageEntitiesDialog.qml
         src/qml/pages/HomePage.qml
         src/qml/pages/StatsPage.qml
         src/qml/pages/BudgetPage.qml
