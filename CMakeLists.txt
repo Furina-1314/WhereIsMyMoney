@@ -33,11 +33,24 @@ qt_add_executable(WhereIsMyMoney
     src/main.cpp
 )
 
+set_source_files_properties(src/qml/Theme.qml PROPERTIES
+    QT_QML_SINGLETON_TYPE TRUE
+)
+
 qt_add_qml_module(WhereIsMyMoney
     URI WhereIsMyMoney
     VERSION 1.0
     QML_FILES
         src/qml/Main.qml
+        src/qml/Theme.qml
+        src/qml/components/FluentButton.qml
+        src/qml/components/FluentTextField.qml
+        src/qml/components/FluentComboBox.qml
+        src/qml/components/FluentDialog.qml
+        src/qml/components/FluentScrollBar.qml
+        src/qml/pages/HomePage.qml
+        src/qml/pages/StatsPage.qml
+        src/qml/pages/BudgetPage.qml
 )
 
 set_target_properties(WhereIsMyMoney PROPERTIES
