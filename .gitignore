@@ -1,0 +1,28 @@
+# Build directories
+build/
+build-*/
+cmake-build-*/
+
+# Qt Creator / IDE
+*.user
+*.user.*
+CMakeLists.txt.user*
+.vscode/
+.idea/
+
+# Compiled artifacts
+*.o
+*.obj
+*.exe
+*.dll
+moc_*.cpp
+qrc_*.cpp
+.qtc_clangd/
+
+# Databases (local user data)
+*.sqlite
+*.db
+
+# OS
+Thumbs.db
+.DS_Store
