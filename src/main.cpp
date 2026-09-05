@@ -1,5 +1,6 @@
 #include <QFont>
 #include <QGuiApplication>
+#include <QIcon>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 
@@ -28,6 +29,7 @@ int main(int argc, char *argv[])
 
     QFont font(QStringLiteral("Segoe UI"), 9);
     app.setFont(font);
+    app.setWindowIcon(QIcon(QStringLiteral(":/assets/app.ico")));
 
     // 数据层（默认位于 AppData；WIMM_TEST_DB 可指向临时测试库）
     const QString dbPath = QString::fromLocal8Bit(qgetenv("WIMM_TEST_DB"));

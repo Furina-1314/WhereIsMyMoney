@@ -31,6 +31,13 @@ target_link_libraries(core PUBLIC Qt6::Sql)
 
 qt_add_executable(WhereIsMyMoney
     src/main.cpp
+    src/app.rc
+)
+
+qt_add_resources(WhereIsMyMoney "appassets"
+    PREFIX "/"
+    FILES
+        assets/app.ico
 )
 
 set_source_files_properties(src/qml/Theme.qml PROPERTIES

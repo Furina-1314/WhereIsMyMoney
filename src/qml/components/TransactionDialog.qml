@@ -91,6 +91,7 @@ FluentDialog {
                 id: titleField
                 Layout.fillWidth: true
                 placeholderText: qsTr("例如：午饭")
+                onAccepted: amountField.forceActiveFocus()
             }
         },
 
@@ -114,6 +115,7 @@ FluentDialog {
                     validator: RegularExpressionValidator {
                         regularExpression: /[0-9]+(\.[0-9]{0,2})?/
                     }
+                    onAccepted: control.save()
                 }
             }
 
@@ -175,6 +177,7 @@ FluentDialog {
                 id: noteField
                 Layout.fillWidth: true
                 placeholderText: qsTr("备注（可选）")
+                onAccepted: control.save()
             }
         },
 

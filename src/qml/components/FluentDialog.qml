@@ -26,6 +26,18 @@ Popup {
 
     Overlay.modeless: Rectangle { color: "#80000000" }
 
+    // Esc 触发次按钮（取消）语义，与 UWP ContentDialog 一致
+    Shortcut {
+        sequence: "Esc"
+        enabled: control.visible && control.secondaryText !== ""
+        context: Qt.WindowShortcut
+        onActivated: {
+            control.rejected()
+            if (control.closeOnSecondary)
+                control.close()
+        }
+    }
+
     enter: Transition {
         NumberAnimation { property: "opacity"; from: 0.0; to: 1.0; duration: 150 }
     }
