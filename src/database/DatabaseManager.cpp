@@ -202,6 +202,10 @@ void DatabaseManager::seedSampleTransactions()
     const int bank = idOf(QStringLiteral("accounts"), QStringLiteral("银行卡"));
 
     const QDate today = QDate::currentDate();
+    const int salary = idOf(QStringLiteral("categories"), QStringLiteral("工资"), Income);
+    if (salary > 0 && bank > 0)
+        addTransaction(today.addDays(-5), Income, 850000, QStringLiteral("9月工资"),
+                       QStringLiteral("税后"), salary, bank);
     if (food > 0 && wechat > 0)
         addTransaction(today, Expense, 3550, QStringLiteral("午饭"), QStringLiteral("公司食堂"), food, wechat);
     if (bus > 0 && alipay > 0)

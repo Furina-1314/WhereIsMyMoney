@@ -35,7 +35,7 @@ FluentDialog {
         if (editData) {
             txType = editData.type
             titleField.text = editData.title
-            amountField.text = Theme.money(editData.amountCents)
+            amountField.text = Theme.moneyPlain(editData.amountCents)
             noteField.text = editData.note
             categoryCombo.currentIndex = categoryCombo.indexOfValue(editData.categoryId)
             accountCombo.currentIndex = accountCombo.indexOfValue(editData.accountId)

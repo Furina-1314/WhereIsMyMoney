@@ -270,7 +270,7 @@ Page {
                         onAccepted: card.save()
                         onVisibleChanged: {
                             if (visible) {
-                                text = card.hasBudget ? Theme.money(card.budgetCents) : ""
+                                text = card.hasBudget ? Theme.moneyPlain(card.budgetCents) : ""
                                 forceActiveFocus()
                                 selectAll()
                             }

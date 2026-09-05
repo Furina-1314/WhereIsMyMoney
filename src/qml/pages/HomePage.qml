@@ -501,6 +501,16 @@ Page {
             else { fail++; console.warn("SELFTEST FAIL:", msg) }
         }
 
+        // --- 金额格式（固定两位小数 + 逗号千分位） ---
+        check(Theme.money(0) === "0.00", "money(0) 应为 0.00")
+        check(Theme.money(5) === "0.05", "money(5) 应为 0.05")
+        check(Theme.money(2345) === "23.45", "money(2345) 应为 23.45")
+        check(Theme.money(150000) === "1,500.00", "money(150000) 应为 1,500.00")
+        check(Theme.money(123456789) === "1,234,567.89", "money(123456789) 应为 1,234,567.89")
+        check(Theme.money(-2345) === "-23.45", "money(-2345) 应为 -23.45")
+        check(Theme.money(2345, true) === "+23.45", "money(2345,true) 应为 +23.45")
+        check(Theme.money(150000).indexOf("..") < 0, "金额不应出现两个小数点")
+        check(Theme.moneyPlain(150000) === "1500.00", "moneyPlain 无千分位逗号")
         // --- 新增支出 ---
         const before = dayTxList.length
         const expenseBefore = daySummary.expenseCents

@@ -67,18 +67,30 @@ QtObject {
     readonly property int controlHeight: 32
     readonly property int sidebarWidth: 216
 
-    // 金额显示：分 -> 元字符串
+    // 手动千分位分组：1234567 -> "1,234,567"（不依赖系统 locale）
+    function groupDigits(n) {
+        return String(n).replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+    }
+
+    // 金额显示：分 -> 元字符串，固定两位小数、整数部分逗号分组
     function money(cents, withSign) {
         const negative = cents < 0
         const abs = Math.abs(cents)
         const yuan = Math.floor(abs / 100)
         const fen = abs % 100
-        const s = yuan.toLocaleString(Qt.locale("zh_CN"))
-                  + "." + (fen < 10 ? "0" : "") + fen
+        const s = groupDigits(yuan) + "." + (fen < 10 ? "0" : "") + fen
         if (negative)
             return "-" + s
         if (withSign)
             return "+" + s
         return s
+    }
+
+    // 输入框回填用：无千分位逗号（配合金额校验正则）
+    function moneyPlain(cents) {
+        const abs = Math.abs(cents)
+        const yuan = Math.floor(abs / 100)
+        const fen = abs % 100
+        return (cents < 0 ? "-" : "") + yuan + "." + (fen < 10 ? "0" : "") + fen
     }
 }
