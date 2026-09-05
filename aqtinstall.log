@@ -1,0 +1,31 @@
+2026-09-05 15:38:10,602 - aqt.main - INFO - installer 60760 aqtinstall(aqt) v3.3.0 on Python 3.14.3 [CPython MSC v.1944 64 bit (AMD64)]
+2026-09-05 15:38:10,603 - aqt.helper - DEBUG - helper 60760 Attempt to download checksum at https://download.qt.io/online/qtsdkrepository/windows_x86/desktop/qt6_6111/qt6_6111/Updates.xml.sha256
+2026-09-05 15:38:16,929 - aqt.helper - DEBUG - helper 60760 Attempt to download checksum at https://download.qt.io/online/qtsdkrepository/windows_x86/desktop/qt6_6111/qt6_6111/Updates.xml.sha256
+2026-09-05 15:38:19,581 - aqt.helper - DEBUG - helper 60760 Attempt to download checksum at https://download.qt.io/online/qtsdkrepository/windows_x86/desktop/qt6_6111/qt6_6111/Updates.xml.sha256
+2026-09-05 15:38:22,558 - aqt.helper - DEBUG - helper 60760 Attempt to download checksum at https://download.qt.io/online/qtsdkrepository/windows_x86/desktop/qt6_6111/qt6_6111/Updates.xml.sha256
+2026-09-05 15:38:24,520 - aqt.helper - DEBUG - helper 60760 Attempt to download checksum at https://download.qt.io/online/qtsdkrepository/windows_x86/desktop/qt6_6111/qt6_6111/Updates.xml.sha256
+2026-09-05 15:38:26,399 - aqt.archives - WARNING - archives 60760 Failed to download checksum for the file 'online/qtsdkrepository/windows_x86/desktop/qt6_6111/qt6_6111/Updates.xml'. This may happen on unofficial mirrors.
+2026-09-05 15:38:28,216 - aqt.main - ERROR - installer 60760 Failed to locate XML data for Qt version '6.11.1'.
+==============================Suggested follow-up:==============================
+* Please use 'aqt list-qt windows desktop' to show versions available.
+2026-09-05 15:38:37,137 - aqt.main - INFO - installer 19220 aqtinstall(aqt) v3.3.0 on Python 3.14.3 [CPython MSC v.1944 64 bit (AMD64)]
+2026-09-05 15:38:37,137 - aqt.helper - DEBUG - helper 19220 Attempt to download checksum at https://download.qt.io/online/qtsdkrepository/windows_x86/desktop/qt6_6111/qt6_6111/Updates.xml.sha256
+2026-09-05 15:38:38,994 - aqt.helper - DEBUG - helper 19220 Attempt to download checksum at https://download.qt.io/online/qtsdkrepository/windows_x86/desktop/qt6_6111/qt6_6111/Updates.xml.sha256
+2026-09-05 15:38:41,293 - aqt.helper - DEBUG - helper 19220 Attempt to download checksum at https://download.qt.io/online/qtsdkrepository/windows_x86/desktop/qt6_6111/qt6_6111/Updates.xml.sha256
+2026-09-05 15:38:43,144 - aqt.helper - DEBUG - helper 19220 Attempt to download checksum at https://download.qt.io/online/qtsdkrepository/windows_x86/desktop/qt6_6111/qt6_6111/Updates.xml.sha256
+2026-09-05 15:38:45,011 - aqt.helper - DEBUG - helper 19220 Attempt to download checksum at https://download.qt.io/online/qtsdkrepository/windows_x86/desktop/qt6_6111/qt6_6111/Updates.xml.sha256
+2026-09-05 15:38:47,340 - aqt.archives - WARNING - archives 19220 Failed to download checksum for the file 'online/qtsdkrepository/windows_x86/desktop/qt6_6111/qt6_6111/Updates.xml'. This may happen on unofficial mirrors.
+2026-09-05 15:38:49,472 - aqt.main - ERROR - installer 19220 Failed to locate XML data for Qt version '6.11.1'.
+==============================Suggested follow-up:==============================
+* Please use 'aqt list-qt windows desktop' to show versions available.
+2026-09-05 16:26:13,616 - aqt.main - INFO - installer 37408 aqtinstall(aqt) v3.3.0 on Python 3.14.3 [CPython MSC v.1944 64 bit (AMD64)]
+2026-09-05 16:26:13,616 - aqt.helper - DEBUG - helper 37408 Attempt to download checksum at https://download.qt.io/online/qtsdkrepository/windows_x86/desktop/tools_ifw/Updates.xml.sha256
+2026-09-05 16:26:17,797 - aqt.helper - DEBUG - helper 37408 Attempt to download checksum at https://download.qt.io/online/qtsdkrepository/windows_x86/desktop/tools_ifw/Updates.xml.sha256
+2026-09-05 16:26:22,400 - aqt.helper - DEBUG - helper 59372 Attempt to download checksum at https://download.qt.io/online/qtsdkrepository/windows_x86/desktop/tools_ifw/qt.tools.ifw.47/4.7.0-0-202402150941ifw-win-x86.7z.sha256
+2026-09-05 16:26:24,275 - aqt.helper - INFO - helper 59372 Downloading qt.tools.ifw.47...
+2026-09-05 16:26:24,275 - aqt.installer - DEBUG - installer 59372 Download URL: https://download.qt.io/online/qtsdkrepository/windows_x86/desktop/tools_ifw/qt.tools.ifw.47/4.7.0-0-202402150941ifw-win-x86.7z
+2026-09-05 16:26:26,210 - aqt.helper - DEBUG - helper 59372 Asked to redirect(302) to: https://qt.mirror.constant.com/online/qtsdkrepository/windows_x86/desktop/tools_ifw/qt.tools.ifw.47/4.7.0-0-202402150941ifw-win-x86.7z
+2026-09-05 16:26:26,210 - aqt.helper - INFO - helper 59372 Redirected: qt.mirror.constant.com
+2026-09-05 16:26:41,685 - aqt.installer - INFO - installer 59372 Finished installation of ifw-win-x86.7z in 19.28954480
+2026-09-05 16:26:41,817 - aqt.main - INFO - installer 37408 Finished installation
+2026-09-05 16:26:41,817 - aqt.main - INFO - installer 37408 Time elapsed: 28.20123010 second

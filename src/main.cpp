@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
     app.setOrganizationName("WhereIsMyMoney");
     app.setApplicationName("WhereIsMyMoney");
-    app.setApplicationVersion("0.1.0");
+    app.setApplicationVersion("0.2.0");
 
     QFont font(QStringLiteral("Segoe UI"), 9);
     app.setFont(font);

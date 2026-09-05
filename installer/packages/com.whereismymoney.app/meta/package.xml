@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Package>
+    <DisplayName>WhereIsMyMoney 主程序</DisplayName>
+    <Description>Fluent Design 个人记账程序（Qt Quick + SQLite）</Description>
+    <Version>0.2.0</Version>
+    <ReleaseDate>2026-09-05</ReleaseDate>
+    <Default>true</Default>
+    <ForcedInstallation>true</ForcedInstallation>
+    <Script>installscript.qs</Script>
+</Package>

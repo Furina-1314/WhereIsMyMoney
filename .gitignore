@@ -31,3 +31,7 @@ Thumbs.db
 deploy/
 build-release/
 WhereIsMyMoney-v0.1.0-win64.zip
+
+WhereIsMyMoney-Setup-*.exe
+WhereIsMyMoney-v*-win64.zip
+installer/packages/*/data/*

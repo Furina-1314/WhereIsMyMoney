@@ -17,7 +17,7 @@
 - **类别与付款方式自管理**：在设置页增、删、改（删除需二次确认；被账目引用时拒绝删除）；首启自带常用类别（餐饮、交通、购物等）与付款方式（现金、微信零钱、支付宝、银行卡）
 - **付款方式** = 支出来源 / 收入流向（某银行卡、微信零钱等）
 - **查询与统计**：周 / 月 / 自定义起止日期统计；类型、类别、付款方式、关键词筛选；逐日收支柱状图、类别与付款方式分布、区间明细
-- **预算**：周预算 / 月预算编制，进度三态提醒（正常 / 接近 80% 橙色 / 超支红色），历史预算回看
+- **预算**：周预算 / 月预算编制，进度三态提醒（正常 / 接近 80% 橙色 / 超支红色），**分预算**（按类别细分并跟踪实际支出），历史预算回看
 - **深色 / 浅色主题**：设置页一键切换，自动记忆
 - 金额千分位格式化、UWP 页面切换动画、Esc 关闭对话框、回车提交表单
 
@@ -43,7 +43,7 @@ src/
 tests/dbtest/                # 数据层自测（ctest）
 ```
 
-## 构建
+## 构建与安装
 
 ```bash
 cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release \
@@ -51,6 +51,15 @@ cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release \
       -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++
 cmake --build build          # 若首次并行编译 qmlcachegen 偶发失败，重跑一次即可
 build/WhereIsMyMoney.exe
+```
+
+也可以直接下载 **离线安装包**（Qt Installer Framework 制作，含开始菜单/桌面快捷方式与卸载程序）：[GitHub Releases](https://github.com/Furina-1314/WhereIsMyMoney/releases)。
+
+安装器源配置位于 `installer/`（config + package 元数据 + 快捷方式脚本），使用官方 IFW 工具构建：
+
+```powershell
+archivegen -c 9 installer/packages/com.whereismymoney.app/data/data.7z <deploy 目录内容>
+binarycreator --offline-only -c installer/config/config.xml -p installer/packages WhereIsMyMoney-Setup.exe
 ```
 
 数据文件位于 `%LOCALAPPDATA%\WhereIsMyMoney\WhereIsMyMoney\whereismymoney.sqlite`。

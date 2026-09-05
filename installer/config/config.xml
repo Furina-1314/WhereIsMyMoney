@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Installer>
+    <Name>WhereIsMyMoney</Name>
+    <Version>0.2.0</Version>
+    <Title>WhereIsMyMoney 记账</Title>
+    <Publisher>Furina-1314</Publisher>
+    <ProductUrl>https://github.com/Furina-1314/WhereIsMyMoney</ProductUrl>
+    <StartMenuDir>WhereIsMyMoney</StartMenuDir>
+    <TargetDir>@ApplicationsDir@/WhereIsMyMoney</TargetDir>
+    <WizardStyle>Modern</WizardStyle>
+    <RemoveTargetDir>true</RemoveTargetDir>
+    <InstallerApplicationIcon>app</InstallerApplicationIcon>
+    <InstallerWindowIcon>app.ico</InstallerWindowIcon>
+    <Watermark>watermark.png</Watermark>
+</Installer>
