@@ -51,6 +51,7 @@ qt_add_qml_module(WhereIsMyMoney
         src/qml/pages/HomePage.qml
         src/qml/pages/StatsPage.qml
         src/qml/pages/BudgetPage.qml
+        src/qml/pages/SettingsPage.qml
 )
 
 set_target_properties(WhereIsMyMoney PROPERTIES

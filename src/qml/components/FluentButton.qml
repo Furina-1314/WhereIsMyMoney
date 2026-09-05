@@ -24,7 +24,7 @@ Button {
               : (control.pressed ? Theme.itemBgPressed
                  : control.hovered ? Theme.itemBgHover : Theme.itemBg)
         border.width: control.primary ? 0 : 1
-        border.color: control.hovered && !control.primary ? "#454545" : Theme.stroke
+        border.color: control.hovered && !control.primary ? Theme.strokeHover : Theme.stroke
     }
 
     contentItem: Text {

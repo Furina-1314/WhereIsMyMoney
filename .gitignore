@@ -9,6 +9,8 @@ cmake-build-*/
 CMakeLists.txt.user*
 .vscode/
 .idea/
+.vs/
+CMakeSettings.json
 
 # Compiled artifacts
 *.o

@@ -15,10 +15,10 @@ ComboBox {
 
     background: Rectangle {
         radius: Theme.radiusControl
-        color: control.hovered || control.popup.visible ? "#2F2F2F" : Theme.itemBg
+        color: control.hovered || control.popup.visible ? Theme.itemBgFocus : Theme.itemBg
         border.width: 1
         border.color: control.popup.visible ? Theme.accent
-                    : control.hovered ? "#4A4A4A" : Theme.stroke
+                    : control.hovered ? Theme.strokeHover : Theme.stroke
     }
 
     contentItem: Text {

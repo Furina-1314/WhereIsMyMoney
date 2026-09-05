@@ -21,9 +21,9 @@ TextField {
 
     background: Rectangle {
         radius: Theme.radiusControl
-        color: control.hovered || control.activeFocus ? "#2F2F2F" : Theme.itemBg
+        color: control.hovered || control.activeFocus ? Theme.itemBgFocus : Theme.itemBg
         border.width: 1
         border.color: control.activeFocus ? Theme.accent
-                    : control.hovered ? "#4A4A4A" : Theme.stroke
+                    : control.hovered ? Theme.strokeHover : Theme.stroke
     }
 }

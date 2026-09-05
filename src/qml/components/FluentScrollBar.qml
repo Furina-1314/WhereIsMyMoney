@@ -10,7 +10,7 @@ ScrollBar {
     contentItem: Rectangle {
         radius: width / 2
         color: control.pressed ? Theme.textSecondary
-               : control.hovered ? "#6A6A6A" : "#4A4A4A"
+               : control.hovered ? Theme.scrollBarHover : Theme.scrollBar
     }
 
     background: null
