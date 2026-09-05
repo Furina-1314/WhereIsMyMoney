@@ -182,6 +182,13 @@ int main(int argc, char *argv[])
     CHECK(db.budgets(0).size() == 1, "周预算 1 条");
     CHECK(db.budget(0, "2030-01-07").isEmpty(), "不存在的预算应返回空 map");
 
+    // 清除预算
+    CHECK(db.clearBudget(0, wa), "清除周预算应成功");
+    CHECK(db.budget(0, wa).isEmpty(), "清除后读取应为空");
+    CHECK(db.clearBudget(0, wa) == false, "重复清除应失败");
+    CHECK(db.clearBudget(5, ma) == false, "非法类型清除应失败");
+    CHECK(db.budgets().size() == 1, "清除后仅剩月预算");
+
     // ---------- 日期工具 ----------
     section("日期工具");
     const QDate any(2026, 9, 5); // 周六

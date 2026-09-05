@@ -223,6 +223,10 @@ void DatabaseManager::seedSampleTransactions()
         addTransaction(today.addDays(-10), Expense, 8990, QStringLiteral("网购衣服"), QStringLiteral("换季"), shop, bank);
     if (fun > 0 && wechat > 0)
         addTransaction(today.addDays(-2), Expense, 3000, QStringLiteral("游戏充值"), QString(), fun, wechat);
+
+    // 演示预算
+    setBudget(WeeklyBudget, weekAnchor(today), 150000);
+    setBudget(MonthlyBudget, monthAnchor(today), 400000);
 }
 
 QSqlQuery DatabaseManager::run(const QString &sql, const QVariantList &binds)
@@ -647,6 +651,23 @@ bool DatabaseManager::setBudget(int budgetType, const QString &anchor, qint64 am
     const bool ok = q.isActive();
     if (ok)
         emit dataChanged();
+    return ok;
+}
+
+bool DatabaseManager::clearBudget(int budgetType, const QString &anchor)
+{
+    if (budgetType != WeeklyBudget && budgetType != MonthlyBudget) {
+        m_lastError = QStringLiteral("预算类型无效");
+        return false;
+    }
+    QSqlQuery q = run(QStringLiteral("DELETE FROM budgets WHERE type=? AND anchor=?"),
+                      {budgetType, anchor});
+    const bool ok = q.isActive() && q.numRowsAffected() > 0;
+    if (ok) {
+        emit dataChanged();
+    } else {
+        m_lastError = QStringLiteral("预算不存在");
+    }
     return ok;
 }
 

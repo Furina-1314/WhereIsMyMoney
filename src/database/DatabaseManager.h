@@ -74,6 +74,7 @@ public:
 
     // ---------- 预算 ----------
     Q_INVOKABLE bool setBudget(int budgetType, const QString &anchor, qint64 amountCents);
+    Q_INVOKABLE bool clearBudget(int budgetType, const QString &anchor); // 删除预算
     Q_INVOKABLE QVariantMap budget(int budgetType, const QString &anchor) const;
     Q_INVOKABLE QVariantList budgets(int budgetType = -1) const;
 
