@@ -59,10 +59,6 @@ Page {
         if (which === "tx") {
             editingTx = null
             txDialog.open()
-        } else if (which === "cat") {
-            catManager.open()
-        } else if (which === "acc") {
-            accManager.open()
         }
     }
 
@@ -358,14 +354,6 @@ Page {
                             txDialog.open()
                         }
                     }
-                    FluentButton {
-                        text: qsTr("类别管理")
-                        onClicked: catManager.open()
-                    }
-                    FluentButton {
-                        text: qsTr("付款方式管理")
-                        onClicked: accManager.open()
-                    }
                     Item { Layout.fillWidth: true }
                     Text {
                         visible: txList.count > 0
@@ -505,16 +493,6 @@ Page {
         editData: page.editingTx
     }
 
-    ManageEntitiesDialog {
-        id: catManager
-        manageCategories: true
-    }
-
-    ManageEntitiesDialog {
-        id: accManager
-        manageCategories: false
-    }
-
     // ----- 应用内自测（WIMM_AUTOTEST=1 时由 main.cpp 调用） -----
     function runSelfTest() {
         let pass = 0, fail = 0
@@ -546,33 +524,6 @@ Page {
                         category: "餐饮", account: "现金", note: "selftest" })
         txDialog.save()
         check(daySummary.expenseCents === expenseBefore + 9999, "编辑后支出汇总 +99.99")
-
-        // --- 类别管理 ---
-        catManager.open()
-        const catCount = catManager.entityList().length
-        catManager.addForTest("自测类别")
-        check(catManager.entityList().length === catCount + 1, "新建类别成功")
-        catManager.addForTest("自测类别")
-        check(catManager.entityList().length === catCount + 1, "重复类别被拒绝")
-        const lastIdx = catManager.entityList().length - 1
-        catManager.renameForTest(lastIdx, "自测类别改")
-        check(catManager.entityList()[lastIdx].name === "自测类别改", "类别改名成功")
-        catManager.deleteForTest(lastIdx)
-        check(catManager.entityList().length === catCount, "删除未使用类别成功")
-        catManager.close()
-
-        // --- 付款方式管理 ---
-        accManager.open()
-        const accCount = accManager.entityList().length
-        accManager.addForTest("自测钱包")
-        check(accManager.entityList().length === accCount + 1,
-              "新建付款方式成功 err=" + accManager.errorState())
-        accManager.renameForTest(accManager.entityList().length - 1, "自测钱包2")
-        check(accManager.entityList()[accManager.entityList().length - 1].name === "自测钱包2",
-              "付款方式改名成功")
-        accManager.deleteForTest(accManager.entityList().length - 1)
-        check(accManager.entityList().length === accCount, "删除未使用付款方式成功")
-        accManager.close()
 
         // --- 删除账目（恢复现场） ---
         editingTx = dayTxList.find(t => t.title === "自测-午饭")

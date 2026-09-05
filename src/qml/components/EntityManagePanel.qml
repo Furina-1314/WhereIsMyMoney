@@ -37,6 +37,31 @@ Item {
         newNameField.text = ""
     }
 
+    // 删除二次确认
+    FluentDialog {
+        id: deleteConfirm
+
+        property int pendingId: -1
+        property string pendingName: ""
+
+        dialogTitle: panel.manageCategories ? qsTr("删除类别") : qsTr("删除付款方式")
+        primaryText: qsTr("删除")
+        secondaryText: qsTr("取消")
+
+        onAccepted: panel.doDelete(deleteConfirm.pendingId)
+
+        body: Text {
+            Layout.fillWidth: true
+            wrapMode: Text.Wrap
+            text: qsTr("确定删除“%1”吗？").arg(deleteConfirm.pendingName)
+                  + (panel.manageCategories ? qsTr("被账目使用的类别无法删除。")
+                                            : qsTr("被账目使用的付款方式无法删除。"))
+            font.family: Theme.fontFamily
+            font.pixelSize: 13
+            color: Theme.textSecondary
+        }
+    }
+
     ColumnLayout {
         id: contentCol
         width: parent.width
@@ -138,7 +163,11 @@ Item {
                             font.pixelSize: 12
                             leftPadding: 10
                             rightPadding: 10
-                            onClicked: panel.doDelete(entityRow.modelData.id)
+                            onClicked: {
+                                deleteConfirm.pendingId = entityRow.modelData.id
+                                deleteConfirm.pendingName = entityRow.modelData.name
+                                deleteConfirm.open()
+                            }
                         }
                     }
 
@@ -151,10 +180,18 @@ Item {
                         visible: panel.editingId === entityRow.modelData.id
 
                         FluentTextField {
+                            id: renameInput
                             Layout.fillWidth: true
                             font.pixelSize: 13
                             text: panel.renameText
                             onTextEdited: panel.renameText = text
+                            onVisibleChanged: {
+                                if (visible) {
+                                    forceActiveFocus()
+                                    selectAll()
+                                }
+                            }
+                            onAccepted: panel.doRename()
                         }
                         FluentButton {
                             text: qsTr("确定")

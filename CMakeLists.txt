@@ -50,7 +50,6 @@ qt_add_qml_module(WhereIsMyMoney
         src/qml/components/FluentScrollBar.qml
         src/qml/components/FluentSegmented.qml
         src/qml/components/TransactionDialog.qml
-        src/qml/components/ManageEntitiesDialog.qml
         src/qml/components/EntityManagePanel.qml
         src/qml/components/DailyBars.qml
         src/qml/components/BreakdownList.qml
