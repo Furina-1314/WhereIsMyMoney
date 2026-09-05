@@ -9,6 +9,10 @@
     <TargetDir>@ApplicationsDir@/WhereIsMyMoney</TargetDir>
     <WizardStyle>Modern</WizardStyle>
     <RemoveTargetDir>true</RemoveTargetDir>
+    <!-- 锁定简体中文界面（避免跟随系统区域误选其他语言） -->
+    <Translations>
+        <Translation>ifw_zh_CN</Translation>
+    </Translations>
     <InstallerApplicationIcon>app</InstallerApplicationIcon>
     <InstallerWindowIcon>app.ico</InstallerWindowIcon>
     <Watermark>watermark.png</Watermark>
