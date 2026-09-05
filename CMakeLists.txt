@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.19)
+﻿cmake_minimum_required(VERSION 3.19)
 
 project(WhereIsMyMoney
     VERSION 0.1.0
@@ -51,6 +51,7 @@ qt_add_qml_module(WhereIsMyMoney
         src/qml/components/FluentSegmented.qml
         src/qml/components/TransactionDialog.qml
         src/qml/components/ManageEntitiesDialog.qml
+        src/qml/components/EntityManagePanel.qml
         src/qml/pages/HomePage.qml
         src/qml/pages/StatsPage.qml
         src/qml/pages/BudgetPage.qml

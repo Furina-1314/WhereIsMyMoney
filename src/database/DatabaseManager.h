@@ -30,6 +30,10 @@ public:
                              bool allowSeed = true);
     ~DatabaseManager() override;
 
+signals:
+    void dataChanged(); // 任何成功的数据变更后发出（QML 绑定据此刷新）
+
+public:
     bool isOpen() const { return m_open; }
     Q_INVOKABLE QString lastError() const { return m_lastError; }
 

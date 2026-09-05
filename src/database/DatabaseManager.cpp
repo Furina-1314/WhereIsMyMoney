@@ -267,6 +267,7 @@ int DatabaseManager::addCategory(const QString &name, int type, const QString &c
             m_lastError = QStringLiteral("同名类别已存在: %1").arg(n);
         return -1;
     }
+    emit dataChanged();
     return q.lastInsertId().toInt();
 }
 
@@ -283,7 +284,10 @@ bool DatabaseManager::renameCategory(int id, const QString &newName)
             m_lastError = QStringLiteral("同名类别已存在: %1").arg(n);
         return false;
     }
-    return q.numRowsAffected() > 0;
+    const bool ok = q.numRowsAffected() > 0;
+    if (ok)
+        emit dataChanged();
+    return ok;
 }
 
 bool DatabaseManager::deleteCategory(int id)
@@ -298,6 +302,7 @@ bool DatabaseManager::deleteCategory(int id)
         m_lastError = QStringLiteral("类别不存在");
         return false;
     }
+    emit dataChanged();
     return true;
 }
 
@@ -339,6 +344,7 @@ int DatabaseManager::addAccount(const QString &name, const QString &note)
             m_lastError = QStringLiteral("同名账户已存在: %1").arg(n);
         return -1;
     }
+    emit dataChanged();
     return q.lastInsertId().toInt();
 }
 
@@ -356,7 +362,10 @@ bool DatabaseManager::updateAccount(int id, const QString &name, const QString &
             m_lastError = QStringLiteral("同名账户已存在: %1").arg(n);
         return false;
     }
-    return q.numRowsAffected() > 0;
+    const bool ok = q.numRowsAffected() > 0;
+    if (ok)
+        emit dataChanged();
+    return ok;
 }
 
 bool DatabaseManager::deleteAccount(int id)
@@ -371,6 +380,7 @@ bool DatabaseManager::deleteAccount(int id)
         m_lastError = QStringLiteral("账户不存在");
         return false;
     }
+    emit dataChanged();
     return true;
 }
 
@@ -425,6 +435,7 @@ int DatabaseManager::addTransaction(const QDate &date, int type, qint64 amountCe
                        title.trimmed(), nz(note).trimmed(), categoryId, accountId});
     if (!q.isActive())
         return -1;
+    emit dataChanged();
     return q.lastInsertId().toInt();
 }
 
@@ -462,13 +473,19 @@ bool DatabaseManager::updateTransaction(int id, const QDate &date, int type, qin
                           "WHERE id=?"),
                       {date.toString(Qt::ISODate), type, amountCents,
                        title.trimmed(), nz(note).trimmed(), categoryId, accountId, id});
-    return q.isActive() && q.numRowsAffected() > 0;
+    const bool ok = q.isActive() && q.numRowsAffected() > 0;
+    if (ok)
+        emit dataChanged();
+    return ok;
 }
 
 bool DatabaseManager::deleteTransaction(int id)
 {
     QSqlQuery q = run(QStringLiteral("DELETE FROM transactions WHERE id=?"), {id});
-    return q.isActive() && q.numRowsAffected() > 0;
+    const bool ok = q.isActive() && q.numRowsAffected() > 0;
+    if (ok)
+        emit dataChanged();
+    return ok;
 }
 
 QVariantList DatabaseManager::transactionsForDate(const QDate &date) const
@@ -621,7 +638,10 @@ bool DatabaseManager::setBudget(int budgetType, const QString &anchor, qint64 am
                           "INSERT INTO budgets(type, anchor, amount) VALUES(?,?,?) "
                           "ON CONFLICT(type, anchor) DO UPDATE SET amount=excluded.amount"),
                       {budgetType, anchor, amountCents});
-    return q.isActive();
+    const bool ok = q.isActive();
+    if (ok)
+        emit dataChanged();
+    return ok;
 }
 
 QVariantMap DatabaseManager::budget(int budgetType, const QString &anchor) const

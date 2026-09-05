@@ -23,6 +23,12 @@ FluentDialog {
     primaryText: ""
     secondaryText: ""
 
+    // 任何入口的数据变更（如设置页新增类别）都刷新下拉模型
+    Connections {
+        target: DB
+        function onDataChanged() { control.revision++ }
+    }
+
     onAboutToShow: {
         errorText = ""
         revision++ // 确保下拉模型每次打开都取最新
