@@ -15,11 +15,19 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
 endif()
 
-find_package(Qt6 6.4 REQUIRED COMPONENTS Quick)
+find_package(Qt6 6.4 REQUIRED COMPONENTS Quick Sql)
 
 qt_standard_project_setup()
 qt_policy(SET QTP0001 NEW)
 qt_policy(SET QTP0004 NEW)
+
+# 数据层静态库：数据库管理器（账目/类别/付款账户/预算）
+qt_add_library(core STATIC
+    src/database/DatabaseManager.h
+    src/database/DatabaseManager.cpp
+)
+target_include_directories(core PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/src)
+target_link_libraries(core PUBLIC Qt6::Sql)
 
 qt_add_executable(WhereIsMyMoney
     src/main.cpp
@@ -39,4 +47,11 @@ set_target_properties(WhereIsMyMoney PROPERTIES
 
 target_link_libraries(WhereIsMyMoney PRIVATE
     Qt6::Quick
+    core
 )
+
+# 数据层自测（ctest 或直接运行 build/dbtest.exe）
+enable_testing()
+add_executable(dbtest tests/dbtest/main.cpp)
+target_link_libraries(dbtest PRIVATE core)
+add_test(NAME dbtest COMMAND dbtest)

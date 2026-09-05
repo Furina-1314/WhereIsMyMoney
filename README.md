@@ -11,7 +11,7 @@
 ## 功能规划
 
 - [x] Phase 1: 仓库与工程骨架
-- [ ] Phase 2: 数据层（SQLite schema、数据库管理器、模型）
+- [x] Phase 2: 数据层（SQLite schema、DatabaseManager、控制台自测 78 项）
 - [ ] Phase 3: Fluent UI 基础框架与主布局
 - [ ] Phase 4: 记账核心（日历选日期、账目增删改查、类别/账户管理）
 - [ ] Phase 5: 查询与统计（周/月/自定义区间、图表）
