@@ -76,6 +76,11 @@ public:
     Q_INVOKABLE bool setBudget(int budgetType, const QString &anchor, qint64 amountCents);
     Q_INVOKABLE bool clearBudget(int budgetType, const QString &anchor); // 删除预算
     Q_INVOKABLE QVariantMap budget(int budgetType, const QString &anchor) const;
+
+    // ---------- 分预算（预算内按类别细分） ----------
+    Q_INVOKABLE QVariantList budgetItems(int budgetId) const;
+    Q_INVOKABLE bool setBudgetItem(int budgetId, int categoryId, qint64 amountCents);
+    Q_INVOKABLE bool clearBudgetItem(int budgetId, int categoryId);
     Q_INVOKABLE QVariantList budgets(int budgetType = -1) const;
 
     // ---------- 日期工具（周一为一周开始） ----------

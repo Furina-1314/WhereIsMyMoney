@@ -189,6 +189,27 @@ int main(int argc, char *argv[])
     CHECK(db.clearBudget(5, ma) == false, "非法类型清除应失败");
     CHECK(db.budgets().size() == 1, "清除后仅剩月预算");
 
+    // ---------- 分预算 ----------
+    const QVariantMap mb = db.budget(1, ma);
+    CHECK(mb.contains("id"), "预算 map 应含 id");
+    const int bid = mb["id"].toInt();
+    CHECK(db.budgetItems(bid).isEmpty(), "新预算应无分预算");
+    CHECK(db.setBudgetItem(bid, foodId, 50000), "设置餐饮分预算应成功");
+    CHECK(db.setBudgetItem(bid, busId, 20000), "设置交通分预算应成功");
+    QVariantList items = db.budgetItems(bid);
+    CHECK(items.size() == 2, "应有 2 条分预算");
+    CHECK(items.at(0).toMap()["amountCents"].toLongLong() == 50000, "分预算按金额降序");
+    CHECK(items.at(0).toMap()["name"].toString() == "餐饮", "分预算 JOIN 类别名");
+    CHECK(db.setBudgetItem(bid, foodId, 60000), "重复设置同一类别应 upsert");
+    CHECK(db.budgetItems(bid).size() == 2, "upsert 后仍为 2 条");
+    CHECK(db.setBudgetItem(bid, 9999, 100) == false, "不存在的类别应被拒绝");
+    CHECK(db.setBudgetItem(99999, foodId, 100) == false, "不存在的预算应被拒绝");
+    CHECK(db.setBudgetItem(bid, foodId, 0) == false, "非正金额应被拒绝");
+    CHECK(db.clearBudgetItem(bid, busId), "删除单条分预算应成功");
+    CHECK(db.budgetItems(bid).size() == 1, "删除后剩 1 条");
+    CHECK(db.clearBudget(1, ma), "清除月预算应成功");
+    CHECK(db.budgetItems(bid).isEmpty(), "清除主预算后分预算级联删除");
+
     // ---------- 日期工具 ----------
     section("日期工具");
     const QDate any(2026, 9, 5); // 周六

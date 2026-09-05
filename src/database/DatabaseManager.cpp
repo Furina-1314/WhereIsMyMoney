@@ -121,6 +121,14 @@ bool DatabaseManager::ensureSchema()
         "  created_at TEXT NOT NULL DEFAULT (datetime('now','localtime')),"
         "  UNIQUE(type, anchor)"
         ")",
+        "CREATE TABLE IF NOT EXISTS budget_items ("
+        "  id INTEGER PRIMARY KEY AUTOINCREMENT,"
+        "  budget_id INTEGER NOT NULL REFERENCES budgets(id) ON DELETE CASCADE,"
+        "  category_id INTEGER NOT NULL REFERENCES categories(id),"
+        "  amount INTEGER NOT NULL CHECK (amount > 0),"
+        "  created_at TEXT NOT NULL DEFAULT (datetime('now','localtime')),"
+        "  UNIQUE(budget_id, category_id)"
+        ")",
     };
 
     for (const char *sql : kStatements) {
@@ -231,6 +239,32 @@ void DatabaseManager::seedSampleTransactions()
     // 演示预算
     setBudget(WeeklyBudget, weekAnchor(today), 150000);
     setBudget(MonthlyBudget, monthAnchor(today), 400000);
+
+    // 演示分预算（挂在本周/本月预算下）
+    const auto budgetIdOf = [this](int type, const QString &anchor) -> int {
+        QSqlQuery q(m_db);
+        q.prepare(QStringLiteral("SELECT id FROM budgets WHERE type=? AND anchor=?"));
+        q.addBindValue(type);
+        q.addBindValue(anchor);
+        q.exec();
+        return q.next() ? q.value(0).toInt() : -1;
+    };
+    const int weekBId = budgetIdOf(WeeklyBudget, weekAnchor(today));
+    const int monthBId = budgetIdOf(MonthlyBudget, monthAnchor(today));
+    if (weekBId > 0) {
+        if (food > 0)
+            setBudgetItem(weekBId, food, 80000);
+        if (bus > 0)
+            setBudgetItem(weekBId, bus, 30000);
+    }
+    if (monthBId > 0) {
+        if (food > 0)
+            setBudgetItem(monthBId, food, 250000);
+        if (shop > 0)
+            setBudgetItem(monthBId, shop, 80000);
+        if (fun > 0)
+            setBudgetItem(monthBId, fun, 40000);
+    }
 }
 
 QSqlQuery DatabaseManager::run(const QString &sql, const QVariantList &binds)
@@ -672,6 +706,67 @@ bool DatabaseManager::clearBudget(int budgetType, const QString &anchor)
     } else {
         m_lastError = QStringLiteral("预算不存在");
     }
+    return ok;
+}
+
+// ---------------- 分预算 ----------------
+
+QVariantList DatabaseManager::budgetItems(int budgetId) const
+{
+    QVariantList list;
+    QSqlQuery q = run(QStringLiteral(
+                          "SELECT bi.category_id, bi.amount, c.name, c.color "
+                          "FROM budget_items bi JOIN categories c ON c.id = bi.category_id "
+                          "WHERE bi.budget_id = ? "
+                          "ORDER BY bi.amount DESC"),
+                      {budgetId});
+    while (q.next()) {
+        QVariantMap m;
+        m["categoryId"] = q.value(0);
+        m["amountCents"] = q.value(1).toLongLong();
+        m["name"] = q.value(2);
+        m["color"] = q.value(3);
+        list.append(m);
+    }
+    return list;
+}
+
+bool DatabaseManager::setBudgetItem(int budgetId, int categoryId, qint64 amountCents)
+{
+    if (!exists(QStringLiteral("budgets"), budgetId)) {
+        m_lastError = QStringLiteral("预算不存在，请先设置主预算");
+        return false;
+    }
+    if (!exists(QStringLiteral("categories"), categoryId)) {
+        m_lastError = QStringLiteral("类别不存在");
+        return false;
+    }
+    if (amountCents <= 0) {
+        m_lastError = QStringLiteral("分预算金额必须大于 0");
+        return false;
+    }
+    QSqlQuery q = run(QStringLiteral(
+                          "INSERT INTO budget_items(budget_id, category_id, amount) VALUES(?,?,?) "
+                          "ON CONFLICT(budget_id, category_id) DO UPDATE SET amount=excluded.amount"),
+                      {budgetId, categoryId, amountCents});
+    const bool ok = q.isActive();
+    if (ok)
+        emit dataChanged();
+    else
+        m_lastError = QStringLiteral("保存分预算失败");
+    return ok;
+}
+
+bool DatabaseManager::clearBudgetItem(int budgetId, int categoryId)
+{
+    QSqlQuery q = run(QStringLiteral(
+                          "DELETE FROM budget_items WHERE budget_id=? AND category_id=?"),
+                      {budgetId, categoryId});
+    const bool ok = q.isActive() && q.numRowsAffected() > 0;
+    if (ok)
+        emit dataChanged();
+    else
+        m_lastError = QStringLiteral("分预算不存在");
     return ok;
 }
 
