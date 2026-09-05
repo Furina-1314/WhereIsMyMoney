@@ -2,14 +2,6 @@
 
 一款 Windows 桌面个人记账程序。界面采用 **Fluent Design**（Windows 10 UWP / Groove Music 风格），支持深色/浅色主题。
 
-| 记账 | 统计 |
-|---|---|
-| ![记账](docs/screenshots/home.png) | ![统计](docs/screenshots/stats.png) |
-
-| 预算 | 设置 |
-|---|---|
-| ![预算](docs/screenshots/budget.png) | ![设置](docs/screenshots/settings.png) |
-
 ## 功能
 
 - **日历记账**：左侧月历点击任意日期即可记录当天账目（今天高亮、支持翻月与"今天"快捷跳转）
