@@ -3,13 +3,19 @@ import QtQuick.Controls.Basic
 import QtQuick.Layouts
 import WhereIsMyMoney
 
-// 记账页：左侧日历 + 右侧当日账目（Phase 4 接入数据与交互）
+// 记账页：左侧日历（选日期/翻月）+ 右侧当日账目列表
 Page {
     id: page
 
-    readonly property date today: new Date()
+    property date today: {
+        var t = new Date()
+        return new Date(t.getFullYear(), t.getMonth(), t.getDate())
+    }
+    property date selectedDate: today
+    property date viewMonth: new Date(today.getFullYear(), today.getMonth(), 1)
+    property int dataRevision: 0 // 数据变更后自增以刷新查询绑定
 
-    // 生成当前月历格子：0 表示空位，其余为日期数字
+    // 生成月历格子：0 表示空位，其余为日期数字
     function monthCells(d) {
         const y = d.getFullYear(), m = d.getMonth()
         const firstOffset = (new Date(y, m, 1).getDay() + 6) % 7 // 周一起始
@@ -21,14 +27,66 @@ Page {
         return cells
     }
 
+    function dateOfCell(day) {
+        return new Date(viewMonth.getFullYear(), viewMonth.getMonth(), day)
+    }
+
+    function sameDay(a, b) {
+        return a.getFullYear() === b.getFullYear()
+                && a.getMonth() === b.getMonth()
+                && a.getDate() === b.getDate()
+    }
+
+    readonly property var weekNames: [qsTr("周日"), qsTr("周一"), qsTr("周二"),
+                                      qsTr("周三"), qsTr("周四"), qsTr("周五"), qsTr("周六")]
+
+    // 当日数据查询（依赖 dataRevision / selectedDate 触发刷新）
+    readonly property var daySummary: {
+        page.dataRevision
+        return DB.rangeSummary(page.selectedDate, page.selectedDate)
+    }
+    readonly property var dayTxList: {
+        page.dataRevision
+        return DB.transactionsForDate(page.selectedDate)
+    }
+
     background: Rectangle { color: Theme.bg }
+
+    // 月历翻月小按钮
+    component MonthNavButton: Rectangle {
+        id: navBtn
+
+        property string icon: ""
+        signal activated()
+
+        width: 26
+        height: 26
+        radius: Theme.radiusControl
+        color: navMouse.hovered ? Theme.itemBgHover : "transparent"
+
+        Text {
+            anchors.centerIn: parent
+            text: navBtn.icon
+            font.family: Theme.iconFontFamily
+            font.pixelSize: 10
+            color: navMouse.hovered ? Theme.textPrimary : Theme.textSecondary
+        }
+
+        MouseArea {
+            id: navMouse
+            anchors.fill: parent
+            hoverEnabled: true
+            cursorShape: Qt.PointingHandCursor
+            onClicked: navBtn.activated()
+        }
+    }
 
     RowLayout {
         anchors.fill: parent
         anchors.margins: Theme.spacingLarge
         spacing: Theme.spacingLarge
 
-        // ----- 日历卡片 -----
+        // ===== 日历卡片 =====
         Rectangle {
             Layout.preferredWidth: 312
             Layout.fillHeight: true
@@ -40,18 +98,40 @@ Page {
                 anchors.margins: Theme.spacingMedium
                 spacing: Theme.spacingSmall
 
-                // 月份标题（翻月按钮在 Phase 4 接入交互）
+                // 月份标题 + 翻月 + 今天
                 RowLayout {
                     Layout.fillWidth: true
+                    spacing: 4
 
                     Text {
-                        text: page.today.getFullYear() + qsTr("年")
-                              + (page.today.getMonth() + 1) + qsTr("月")
+                        text: viewMonth.getFullYear() + qsTr("年")
+                              + (viewMonth.getMonth() + 1) + qsTr("月")
                         font.family: Theme.fontFamily
                         font.pixelSize: 17
                         font.weight: Font.DemiBold
                         color: Theme.textPrimary
                         Layout.fillWidth: true
+                    }
+                    MonthNavButton {
+                        icon: "\uE76B" // ChevronLeft
+                        onActivated: viewMonth = new Date(viewMonth.getFullYear(),
+                                                          viewMonth.getMonth() - 1, 1)
+                    }
+                    MonthNavButton {
+                        icon: "\uE76C" // ChevronRight
+                        onActivated: viewMonth = new Date(viewMonth.getFullYear(),
+                                                          viewMonth.getMonth() + 1, 1)
+                    }
+                    FluentButton {
+                        text: qsTr("今天")
+                        implicitHeight: 26
+                        font.pixelSize: 12
+                        leftPadding: 10
+                        rightPadding: 10
+                        onClicked: {
+                            selectedDate = today
+                            viewMonth = new Date(today.getFullYear(), today.getMonth(), 1)
+                        }
                     }
                 }
 
@@ -74,52 +154,102 @@ Page {
                     }
                 }
 
-                // 日期网格（静态展示；今天高亮）
+                // 日期网格
                 GridLayout {
                     columns: 7
                     Layout.fillWidth: true
                     Layout.fillHeight: true
                     Repeater {
-                        model: page.monthCells(page.today)
+                        model: page.monthCells(page.viewMonth)
                         Item {
+                            id: cell
                             required property var modelData
-                            readonly property bool isToday: modelData === page.today.getDate()
+
+                            readonly property date cellDate: modelData > 0
+                                ? dateOfCell(modelData) : page.selectedDate
+                            readonly property bool isToday: modelData > 0 && sameDay(cellDate, today)
+                            readonly property bool isSelected: modelData > 0 && sameDay(cellDate, selectedDate)
+
                             Layout.fillWidth: true
                             Layout.fillHeight: true
 
                             Rectangle {
                                 anchors.centerIn: parent
-                                width: Math.min(parent.width, parent.height) - 6
+                                width: Math.min(parent.width, parent.height) - 8
                                 height: width
                                 radius: height / 2
-                                color: isToday ? Theme.accent : "transparent"
+                                color: isSelected ? Theme.accent
+                                       : cellMouse.hovered ? Theme.itemBgHover : "transparent"
+                                border.width: isToday && !isSelected ? 2 : 0
+                                border.color: Theme.accent
 
                                 Text {
                                     anchors.centerIn: parent
-                                    text: modelData > 0 ? modelData : ""
+                                    text: cell.modelData > 0 ? cell.modelData : ""
                                     font.family: Theme.fontFamily
                                     font.pixelSize: 13
-                                    color: isToday ? "#FFFFFF"
-                                                   : modelData > 0 ? Theme.textPrimary : "transparent"
+                                    color: cell.isSelected ? "#FFFFFF"
+                                           : cell.isToday ? Theme.accent
+                                           : cell.modelData > 0 ? Theme.textPrimary : "transparent"
+                                }
+                            }
+
+                            MouseArea {
+                                id: cellMouse
+                                anchors.fill: parent
+                                hoverEnabled: true
+                                cursorShape: cell.modelData > 0 ? Qt.PointingHandCursor : Qt.ArrowCursor
+                                onClicked: {
+                                    if (cell.modelData > 0)
+                                        page.selectedDate = cell.cellDate
                                 }
                             }
                         }
                     }
                 }
 
-                // 日历底部小结（Phase 4 接入数据）
-                Text {
+                // 日历底部当日小结
+                ColumnLayout {
                     Layout.fillWidth: true
-                    horizontalAlignment: Text.AlignHCenter
-                    text: qsTr("点击日期记录当天账目（Phase 4 启用）")
-                    font.family: Theme.fontFamily
-                    font.pixelSize: 12
-                    color: Theme.textDisabled
+                    spacing: 2
+
+                    RowLayout {
+                        Layout.fillWidth: true
+                        Text {
+                            text: qsTr("支出")
+                            font.family: Theme.fontFamily
+                            font.pixelSize: 12
+                            color: Theme.textSecondary
+                        }
+                        Item { Layout.fillWidth: true }
+                        Text {
+                            text: "¥" + Theme.money(daySummary.expenseCents ? daySummary.expenseCents : 0)
+                            font.family: Theme.fontFamily
+                            font.pixelSize: 12
+                            color: Theme.colorExpense
+                        }
+                    }
+                    RowLayout {
+                        Layout.fillWidth: true
+                        Text {
+                            text: qsTr("收入")
+                            font.family: Theme.fontFamily
+                            font.pixelSize: 12
+                            color: Theme.textSecondary
+                        }
+                        Item { Layout.fillWidth: true }
+                        Text {
+                            text: "¥" + Theme.money(daySummary.incomeCents ? daySummary.incomeCents : 0)
+                            font.family: Theme.fontFamily
+                            font.pixelSize: 12
+                            color: Theme.colorIncome
+                        }
+                    }
                 }
             }
         }
 
-        // ----- 右侧内容区 -----
+        // ===== 右侧内容区 =====
         Rectangle {
             Layout.fillWidth: true
             Layout.fillHeight: true
@@ -127,29 +257,185 @@ Page {
             radius: Theme.radiusPanel
 
             ColumnLayout {
-                anchors.centerIn: parent
-                spacing: Theme.spacingMedium
+                anchors.fill: parent
+                anchors.margins: Theme.spacingLarge
+                spacing: 0
 
-                Text {
-                    Layout.alignment: Qt.AlignHCenter
-                    text: "\uE9D5" // CheckList
-                    font.family: Theme.iconFontFamily
-                    font.pixelSize: 44
-                    color: Theme.textDisabled
+                // 日期标题行
+                RowLayout {
+                    Layout.fillWidth: true
+                    spacing: Theme.spacingMedium
+
+                    ColumnLayout {
+                        spacing: 0
+                        Text {
+                            text: (selectedDate.getMonth() + 1) + qsTr("月")
+                                  + selectedDate.getDate() + qsTr("日")
+                            font.family: Theme.fontFamily
+                            font.pixelSize: 24
+                            font.weight: Font.DemiBold
+                            color: Theme.textPrimary
+                        }
+                        Text {
+                            text: weekNames[selectedDate.getDay()] + " · "
+                                  + selectedDate.getFullYear() + qsTr("年")
+                            font.family: Theme.fontFamily
+                            font.pixelSize: 13
+                            color: Theme.textSecondary
+                        }
+                    }
+
+                    Item { Layout.fillWidth: true }
+
+                    ColumnLayout {
+                        spacing: 2
+                        RowLayout {
+                            Text {
+                                text: qsTr("支出 ")
+                                font.family: Theme.fontFamily
+                                font.pixelSize: 13
+                                color: Theme.textSecondary
+                            }
+                            Text {
+                                text: "¥" + Theme.money(daySummary.expenseCents ? daySummary.expenseCents : 0)
+                                font.family: Theme.fontFamily
+                                font.pixelSize: 16
+                                font.weight: Font.DemiBold
+                                color: Theme.colorExpense
+                            }
+                        }
+                        RowLayout {
+                            Text {
+                                text: qsTr("收入 ")
+                                font.family: Theme.fontFamily
+                                font.pixelSize: 13
+                                color: Theme.textSecondary
+                            }
+                            Text {
+                                text: "¥" + Theme.money(daySummary.incomeCents ? daySummary.incomeCents : 0)
+                                font.family: Theme.fontFamily
+                                font.pixelSize: 16
+                                font.weight: Font.DemiBold
+                                color: Theme.colorIncome
+                            }
+                        }
+                    }
                 }
-                Text {
-                    Layout.alignment: Qt.AlignHCenter
-                    text: qsTr("选中日期的账目将显示在这里")
-                    font.family: Theme.fontFamily
-                    font.pixelSize: 16
-                    color: Theme.textSecondary
+
+                Rectangle {
+                    Layout.fillWidth: true
+                    Layout.topMargin: Theme.spacingMedium
+                    Layout.bottomMargin: Theme.spacingSmall
+                    height: 1
+                    color: Theme.stroke
                 }
-                Text {
-                    Layout.alignment: Qt.AlignHCenter
-                    text: qsTr("Phase 4 接入数据后可新增 / 编辑 / 删除账目")
-                    font.family: Theme.fontFamily
-                    font.pixelSize: 13
-                    color: Theme.textDisabled
+
+                // 账目列表
+                ListView {
+                    id: txList
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    clip: true
+                    model: page.dayTxList
+                    spacing: 2
+                    ScrollBar.vertical: FluentScrollBar {
+                        policy: txList.contentHeight > txList.height
+                                ? ScrollBar.AsNeeded : ScrollBar.AlwaysOff
+                    }
+
+                    // 空状态
+                    Text {
+                        anchors.centerIn: parent
+                        visible: txList.count === 0
+                        text: qsTr("这一天还没有账目")
+                        font.family: Theme.fontFamily
+                        font.pixelSize: 14
+                        color: Theme.textDisabled
+                    }
+
+                    delegate: Rectangle {
+                        id: txItem
+
+                        required property var modelData
+
+                        readonly property bool isIncome: modelData.type === 1
+
+                        width: txList.width
+                        height: 66
+                        radius: Theme.radiusControl
+                        color: itemMouse.hovered ? Theme.itemBg : "transparent"
+                        Behavior on color { ColorAnimation { duration: 100 } }
+
+                        RowLayout {
+                            anchors.fill: parent
+                            anchors.leftMargin: 12
+                            anchors.rightMargin: 16
+                            spacing: Theme.spacingMedium
+
+                            // 类别色点
+                            Rectangle {
+                                Layout.alignment: Qt.AlignVCenter
+                                width: 10
+                                height: 10
+                                radius: 5
+                                color: txItem.modelData.categoryColor
+                                        ? txItem.modelData.categoryColor : Theme.accent
+                            }
+
+                            ColumnLayout {
+                                Layout.fillWidth: true
+                                spacing: 2
+
+                                Text {
+                                    text: txItem.modelData.title
+                                    font.family: Theme.fontFamily
+                                    font.pixelSize: 15
+                                    color: Theme.textPrimary
+                                    elide: Text.ElideRight
+                                    Layout.fillWidth: true
+                                }
+                                Text {
+                                    visible: text !== ""
+                                    text: txItem.modelData.note
+                                    font.family: Theme.fontFamily
+                                    font.pixelSize: 12
+                                    color: Theme.textSecondary
+                                    elide: Text.ElideRight
+                                    Layout.fillWidth: true
+                                }
+                            }
+
+                            ColumnLayout {
+                                spacing: 2
+
+                                Text {
+                                    Layout.alignment: Qt.AlignRight
+                                    text: (txItem.isIncome ? "+" : "-")
+                                          + Theme.money(txItem.modelData.amountCents)
+                                    font.family: Theme.fontFamily
+                                    font.pixelSize: 16
+                                    font.weight: Font.DemiBold
+                                    color: txItem.isIncome ? Theme.colorIncome : Theme.colorExpense
+                                }
+                                Text {
+                                    Layout.alignment: Qt.AlignRight
+                                    text: txItem.modelData.categoryName + " · "
+                                          + txItem.modelData.accountName
+                                    font.family: Theme.fontFamily
+                                    font.pixelSize: 11
+                                    color: Theme.textSecondary
+                                }
+                            }
+                        }
+
+                        MouseArea {
+                            id: itemMouse
+                            anchors.fill: parent
+                            hoverEnabled: true
+                            cursorShape: Qt.PointingHandCursor
+                            // Phase 4b: 点击进入编辑
+                        }
+                    }
                 }
             }
         }

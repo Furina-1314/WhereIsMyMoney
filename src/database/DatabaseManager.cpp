@@ -59,6 +59,8 @@ DatabaseManager::DatabaseManager(const QString &databasePath, QObject *parent)
 
     if (!ensureSchema())
         return;
+    if (databasePath.isEmpty()) // 默认库（应用数据目录）才写入种子数据
+        seedDefaultsIfEmpty();
     m_open = true;
 }
 
@@ -123,6 +125,92 @@ bool DatabaseManager::ensureSchema()
         }
     }
     return true;
+}
+
+// 首次启动（无任何类别）时写入常用类别与付款账户，用户可自行增删
+void DatabaseManager::seedDefaultsIfEmpty()
+{
+    QSqlQuery check(m_db);
+    if (!check.exec(QStringLiteral("SELECT COUNT(*) FROM categories")) || !check.next())
+        return;
+    if (check.value(0).toInt() > 0)
+        return;
+
+    struct Cat { const char *name; int type; const char *color; };
+    static const Cat kCats[] = {
+        { "餐饮", Expense, "#E81123" }, { "交通", Expense, "#0078D7" },
+        { "购物", Expense, "#B146C2" }, { "娱乐", Expense, "#FF8C00" },
+        { "居住", Expense, "#008272" }, { "医疗", Expense, "#E3008C" },
+        { "教育", Expense, "#744DA9" }, { "其他支出", Expense, "#68768A" },
+        { "工资", Income, "#10893E" },  { "奖金", Income, "#00B294" },
+        { "理财", Income, "#0078D7" },  { "红包", Income, "#EF6950" },
+    };
+    for (const Cat &c : kCats) {
+        QSqlQuery q(m_db);
+        q.prepare(QStringLiteral("INSERT OR IGNORE INTO categories(name, type, color) VALUES(?,?,?)"));
+        q.addBindValue(QString::fromUtf8(c.name));
+        q.addBindValue(c.type);
+        q.addBindValue(QString::fromLatin1(c.color));
+        q.exec();
+    }
+
+    static const char *kAccounts[] = { "现金", "微信零钱", "支付宝", "银行卡" };
+    for (const char *a : kAccounts) {
+        QSqlQuery q(m_db);
+        q.prepare(QStringLiteral("INSERT OR IGNORE INTO accounts(name) VALUES(?)"));
+        q.addBindValue(QString::fromUtf8(a));
+        q.exec();
+    }
+}
+
+// 演示用示例账目（仅在测试库上由 main.cpp 调用；库内已有账目则跳过）
+void DatabaseManager::seedSampleTransactions()
+{
+    QSqlQuery check(m_db);
+    if (!check.exec(QStringLiteral("SELECT COUNT(*) FROM transactions")) || !check.next())
+        return;
+    if (check.value(0).toInt() > 0)
+        return;
+
+    auto idOf = [this](const QString &table, const QString &name, int type = -1) -> int {
+        QSqlQuery q(m_db);
+        if (type >= 0)
+            q.prepare(QStringLiteral("SELECT id FROM %1 WHERE name=? AND type=?").arg(table));
+        else
+            q.prepare(QStringLiteral("SELECT id FROM %1 WHERE name=?").arg(table));
+        q.addBindValue(name);
+        if (type >= 0)
+            q.addBindValue(type);
+        q.exec();
+        return q.next() ? q.value(0).toInt() : -1;
+    };
+
+    const int food = idOf(QStringLiteral("categories"), QStringLiteral("餐饮"), Expense);
+    const int bus = idOf(QStringLiteral("categories"), QStringLiteral("交通"), Expense);
+    const int fun = idOf(QStringLiteral("categories"), QStringLiteral("娱乐"), Expense);
+    const int shop = idOf(QStringLiteral("categories"), QStringLiteral("购物"), Expense);
+    const int licai = idOf(QStringLiteral("categories"), QStringLiteral("理财"), Income);
+    const int wechat = idOf(QStringLiteral("accounts"), QStringLiteral("微信零钱"));
+    const int alipay = idOf(QStringLiteral("accounts"), QStringLiteral("支付宝"));
+    const int cash = idOf(QStringLiteral("accounts"), QStringLiteral("现金"));
+    const int bank = idOf(QStringLiteral("accounts"), QStringLiteral("银行卡"));
+
+    const QDate today = QDate::currentDate();
+    if (food > 0 && wechat > 0)
+        addTransaction(today, Expense, 3550, QStringLiteral("午饭"), QStringLiteral("公司食堂"), food, wechat);
+    if (bus > 0 && alipay > 0)
+        addTransaction(today, Expense, 600, QStringLiteral("地铁"), QString(), bus, alipay);
+    if (bus > 0 && cash > 0)
+        addTransaction(today.addDays(-1), Expense, 2380, QStringLiteral("打车回家"),
+                       QStringLiteral("下雨"), bus, cash);
+    if (licai > 0 && alipay > 0)
+        addTransaction(today, Income, 5230, QStringLiteral("理财收益"),
+                       QStringLiteral("货币基金"), licai, alipay);
+    if (fun > 0 && wechat > 0)
+        addTransaction(today.addDays(-3), Expense, 4280, QStringLiteral("电影票"),
+                       QStringLiteral("周末"), fun, wechat);
+    if (shop > 0 && bank > 0)
+        addTransaction(today.addDays(-3), Expense, 15600, QStringLiteral("超市采购"), QString(), shop, bank);
 }
 
 QSqlQuery DatabaseManager::run(const QString &sql, const QVariantList &binds)

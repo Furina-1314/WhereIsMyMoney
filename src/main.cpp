@@ -18,9 +18,13 @@ int main(int argc, char *argv[])
     QFont font(QStringLiteral("Segoe UI"), 9);
     app.setFont(font);
 
-    DatabaseManager database; // 数据层（默认位于 AppData）
+    // 数据层（默认位于 AppData；WIMM_TEST_DB 可指向临时测试库）
+    const QString dbPath = QString::fromLocal8Bit(qgetenv("WIMM_TEST_DB"));
+    DatabaseManager database(dbPath);
     if (!database.isOpen())
         qWarning() << "数据库初始化失败:" << database.lastError();
+    if (!dbPath.isEmpty() && qEnvironmentVariableIsSet("WIMM_SEED_TX"))
+        database.seedSampleTransactions();
 
     QQmlApplicationEngine engine;
     engine.rootContext()->setContextProperty(QStringLiteral("DB"), &database);

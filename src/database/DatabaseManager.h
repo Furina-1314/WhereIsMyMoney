@@ -31,6 +31,9 @@ public:
     bool isOpen() const { return m_open; }
     QString lastError() const { return m_lastError; }
 
+    // 测试辅助：无账目时写入示例账目（演示/截图用，不进生产路径）
+    void seedSampleTransactions();
+
     // ---------- 类别 ----------
     int addCategory(const QString &name, int type, const QString &color = QString());
     bool renameCategory(int id, const QString &newName);
@@ -78,6 +81,7 @@ public:
 
 private:
     bool ensureSchema();
+    void seedDefaultsIfEmpty(); // 首次启动写入默认类别/付款账户
     QSqlQuery run(const QString &sql, const QVariantList &binds = QVariantList());
     QSqlQuery run(const QString &sql, const QVariantList &binds = QVariantList()) const;
     bool exists(const QString &table, int id) const;
