@@ -15,7 +15,8 @@ if(NOT CMAKE_BUILD_TYPE)
     set(CMAKE_BUILD_TYPE Release)
 endif()
 
-find_package(Qt6 6.4 REQUIRED COMPONENTS Quick Sql)
+# Qt 6.5 起提供 QStyleHints::colorScheme，主题的"跟随系统"依赖该接口
+find_package(Qt6 6.5 REQUIRED COMPONENTS Quick Sql)
 
 qt_standard_project_setup()
 qt_policy(SET QTP0001 NEW)

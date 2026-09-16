@@ -29,3 +29,15 @@
 2026-09-05 16:26:41,685 - aqt.installer - INFO - installer 59372 Finished installation of ifw-win-x86.7z in 19.28954480
 2026-09-05 16:26:41,817 - aqt.main - INFO - installer 37408 Finished installation
 2026-09-05 16:26:41,817 - aqt.main - INFO - installer 37408 Time elapsed: 28.20123010 second
+2026-09-11 10:35:35,348 - aqt.helper - DEBUG - helper 33812 Attempt to download checksum at https://download.qt.io/online/qtsdkrepository/windows_x86/desktop/qt6_6111/qt6_6111/Updates.xml.sha256
+2026-09-11 10:35:36,414 - aqt.helper - DEBUG - helper 33812 Attempt to download checksum at https://download.qt.io/online/qtsdkrepository/windows_x86/desktop/qt6_6111/qt6_6111/Updates.xml.sha256
+2026-09-11 10:35:37,460 - aqt.helper - DEBUG - helper 33812 Attempt to download checksum at https://download.qt.io/online/qtsdkrepository/windows_x86/desktop/qt6_6111/qt6_6111/Updates.xml.sha256
+2026-09-11 10:35:38,403 - aqt.helper - DEBUG - helper 33812 Attempt to download checksum at https://download.qt.io/online/qtsdkrepository/windows_x86/desktop/qt6_6111/qt6_6111/Updates.xml.sha256
+2026-09-11 10:35:39,370 - aqt.helper - DEBUG - helper 33812 Attempt to download checksum at https://download.qt.io/online/qtsdkrepository/windows_x86/desktop/qt6_6111/qt6_6111/Updates.xml.sha256
+2026-09-11 10:35:40,411 - aqt.main - ERROR - installer 33812 Failed to download checksum for the file 'Updates.xml' from mirrors '['https://download.qt.io']
+==============================Suggested follow-up:==============================
+* Check your internet connection
+* Consider modifying `requests.max_retries_to_retrieve_hash` in settings.ini
+* Consider modifying `mirrors.trusted_mirrors` in settings.ini (see https://aqtinstall.readthedocs.io/en/stable/configuration.html#configuration)
+* Please use 'aqt list-qt windows desktop' to show versions of Qt available.
+2026-09-11 10:43:28,635 - aqt.main - INFO - installer 19228 aqtinstall(aqt) v3.3.0 on Python 3.13.5 [CPython MSC v.1943 64 bit (AMD64)]

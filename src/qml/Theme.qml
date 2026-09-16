@@ -2,23 +2,41 @@ pragma Singleton
 import QtQuick
 import QtCore
 
-// Win10 UWP / Groove Music 风格主题（深色/浅色可切换，选择持久化）
+// Win10 UWP / Groove Music 风格主题（外观三态：跟随系统 / 浅色 / 深色，选择持久化）
 QtObject {
     id: theme
 
-    // 持久化外观选择（QtObject 无默认 children 属性，Settings 挂到显式属性）
+    // 持久化外观模式（QtObject 无默认 children 属性，Settings 挂到显式属性）
+    // 空串表示"用户尚未选择"：QQmlSettings 会把声明属性的默认值写回存储，
+    // 因此默认值必须是无副作用的空串，而不是某个具体模式
     property Settings _store: Settings {
         category: "Appearance"
-        property bool dark: true
+        property string mode: ""
     }
 
-    // 外观模式：默认读持久化设置；测试可用 WIMM_THEME=light/dark 强制
-    property bool dark: initialTheme === "light" ? false
-                        : initialTheme === "dark" ? true
-                        : _store.dark
+    // 系统深浅色：Qt 6.5+ QStyleHints::colorScheme（Windows 由 QPA 读取注册表
+    // AppsUseLightTheme，并监听 WM_SETTINGCHANGE），故运行中改系统主题也会立即跟随
+    readonly property bool systemDark: {
+        const scheme = Qt.styleHints.colorScheme
+        // 系统未上报主题时（Unknown）沿用应用原有的深色默认
+        return scheme === Qt.ColorScheme.Dark || scheme === Qt.ColorScheme.Unknown
+    }
+
+    // 测试可用 WIMM_THEME=light/dark 强制外观：优先于持久化设置，且不写回
+    readonly property string _forcedMode: (initialTheme === "light" || initialTheme === "dark")
+                                          ? initialTheme : ""
+
+    // 外观模式：环境强制 > 持久化选择 > 跟随系统
+    property string mode: _forcedMode !== "" ? _forcedMode
+                        : (_store.mode === "light" || _store.mode === "dark") ? _store.mode
+                        : "system"
+
     property bool _booted: false
     Component.onCompleted: _booted = true
-    onDarkChanged: if (_booted) _store.dark = dark // 启动加载不写回
+    onModeChanged: if (_booted && _forcedMode === "") _store.mode = mode // 启动加载不写回
+
+    // 实际生效的深色开关：显式深色，或跟随系统且当前系统为深色
+    readonly property bool dark: mode === "dark" || (mode === "system" && systemDark)
 
     // 背景与面板
     readonly property color bg: dark ? "#121212" : "#EDEDED"            // 主背景

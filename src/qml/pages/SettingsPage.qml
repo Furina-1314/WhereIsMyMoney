@@ -100,23 +100,29 @@ Page {
             // ===== 外观 =====
             SectionHeader {
                 title: qsTr("外观")
-                subtitle: qsTr("选择应用的颜色模式")
+                subtitle: qsTr("选择应用的颜色模式，默认跟随系统")
             }
 
             RowLayout {
                 spacing: Theme.spacingMedium
 
                 ThemeOptionButton {
+                    label: qsTr("跟随系统")
+                    icon: "\uE770" // System
+                    checked: Theme.mode === "system"
+                    onChosen: Theme.mode = "system"
+                }
+                ThemeOptionButton {
                     label: qsTr("浅色模式")
                     icon: "\uE706" // Brightness
-                    checked: !Theme.dark
-                    onChosen: Theme.dark = false
+                    checked: Theme.mode === "light"
+                    onChosen: Theme.mode = "light"
                 }
                 ThemeOptionButton {
                     label: qsTr("深色模式")
                     icon: "\uE708" // QuietHours
-                    checked: Theme.dark
-                    onChosen: Theme.dark = true
+                    checked: Theme.mode === "dark"
+                    onChosen: Theme.mode = "dark"
                 }
             }
 
@@ -165,6 +171,14 @@ Page {
             if (cond) { pass++ }
             else { fail++; console.warn("SETTINGS SELFTEST FAIL:", msg) }
         }
+
+        // 外观：模式三态合法；WIMM_THEME 强制时深浅色应与之相符
+        console.info("APPEARANCE mode=" + Theme.mode + " dark=" + Theme.dark
+                     + " systemDark=" + Theme.systemDark
+                     + " scheme=" + Qt.styleHints.colorScheme)
+        check(["system", "light", "dark"].indexOf(Theme.mode) !== -1, "外观模式取值合法")
+        if (typeof initialTheme !== "undefined" && initialTheme !== "")
+            check(Theme.dark === (initialTheme === "dark"), "WIMM_THEME 强制外观生效")
 
         // 类别：增、重名拒绝、改、删
         const catCount = catPanel.entityList.length
