@@ -1,0 +1,177 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1920" y2="1080" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0b1226"/>
+      <stop offset=".55" stop-color="#070c18"/>
+      <stop offset="1" stop-color="#04060c"/>
+    </linearGradient>
+    <radialGradient id="gBlue" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#2f6ee6" stop-opacity=".34"/>
+      <stop offset="1" stop-color="#2f6ee6" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="gBlue2" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#1f56b4" stop-opacity=".28"/>
+      <stop offset="1" stop-color="#1f56b4" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="gMint" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#34d399" stop-opacity=".15"/>
+      <stop offset="1" stop-color="#34d399" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="lineGrad" x1="0" y1="0" x2="1920" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#2f6ee6"/>
+      <stop offset=".6" stop-color="#38c6ff"/>
+      <stop offset="1" stop-color="#34d399"/>
+    </linearGradient>
+    <linearGradient id="areaGrad" x1="0" y1="380" x2="0" y2="1080" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#2f80ff" stop-opacity=".20"/>
+      <stop offset="1" stop-color="#2f80ff" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#5ea2ff"/>
+      <stop offset="1" stop-color="#1f6fe0"/>
+    </linearGradient>
+    <linearGradient id="coinG" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffdf8e"/>
+      <stop offset="1" stop-color="#e2a72e"/>
+    </linearGradient>
+    <filter id="soft" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="10"/>
+    </filter>
+    <filter id="cardShadow" x="-40%" y="-40%" width="180%" height="180%">
+      <feDropShadow dx="0" dy="22" stdDeviation="30" flood-color="#000000" flood-opacity=".45"/>
+    </filter>
+    <pattern id="dots" width="30" height="30" patternUnits="userSpaceOnUse">
+      <circle cx="1.6" cy="1.6" r="1.6" fill="#94b2ff" fill-opacity=".06"/>
+    </pattern>
+  </defs>
+
+  <!-- backdrop -->
+  <rect width="1920" height="1080" fill="url(#bg)"/>
+  <ellipse cx="1480" cy="150" rx="680" ry="440" fill="url(#gBlue)"/>
+  <ellipse cx="960" cy="1130" rx="960" ry="320" fill="url(#gBlue2)"/>
+  <ellipse cx="230" cy="960" rx="540" ry="360" fill="url(#gMint)"/>
+  <rect width="1920" height="1080" fill="url(#dots)"/>
+  <circle cx="1520" cy="60" r="300" fill="none" stroke="#3b8bff" stroke-opacity=".14"/>
+  <circle cx="1520" cy="60" r="390" fill="none" stroke="#3b8bff" stroke-opacity=".07"/>
+
+  <!-- particles -->
+  <g fill="#9dc1ff">
+    <circle cx="220" cy="220" r="2.4" fill-opacity=".38"/>
+    <circle cx="410" cy="90" r="1.8" fill-opacity=".24"/>
+    <circle cx="640" cy="180" r="2.2" fill-opacity=".3"/>
+    <circle cx="980" cy="90" r="1.6" fill-opacity=".22"/>
+    <circle cx="1240" cy="140" r="2.6" fill-opacity=".4"/>
+    <circle cx="1720" cy="230" r="2" fill-opacity=".26"/>
+    <circle cx="1840" cy="480" r="2.4" fill-opacity=".3"/>
+    <circle cx="120" cy="520" r="2" fill-opacity=".22"/>
+    <circle cx="520" cy="640" r="1.8" fill-opacity=".2"/>
+    <circle cx="1740" cy="700" r="2.2" fill-opacity=".3"/>
+    <circle cx="1320" cy="980" r="2" fill-opacity=".22"/>
+    <circle cx="380" cy="1000" r="2.2" fill-opacity=".26"/>
+  </g>
+  <g stroke="#cfe0ff" stroke-width="2" stroke-linecap="round" opacity=".5">
+    <path d="M1180 250v16M1172 258h16"/>
+    <path d="M330 760v12M324 766h12"/>
+    <path d="M1810 930v12M1804 936h12"/>
+  </g>
+
+  <!-- main trend line -->
+  <path d="M-40 830 C 260 800, 420 660, 660 690 C 900 720, 980 600, 1180 590 C 1380 580, 1560 470, 1980 380 L 1980 1080 L -40 1080 Z" fill="url(#areaGrad)"/>
+  <path d="M-40 830 C 260 800, 420 660, 660 690 C 900 720, 980 600, 1180 590 C 1380 580, 1560 470, 1980 380" fill="none" stroke="#2f80ff" stroke-width="16" stroke-opacity=".32" filter="url(#soft)"/>
+  <path d="M-40 830 C 260 800, 420 660, 660 690 C 900 720, 980 600, 1180 590 C 1380 580, 1560 470, 1980 380" fill="none" stroke="url(#lineGrad)" stroke-width="5" stroke-linecap="round"/>
+  <path d="M-40 930 C 300 910, 700 860, 1000 840 C 1300 820, 1600 760, 1980 700" fill="none" stroke="#34d399" stroke-opacity=".42" stroke-width="3.5" stroke-linecap="round" stroke-dasharray="1 16"/>
+  <circle cx="1180" cy="590" r="7" fill="#38c6ff"/>
+  <circle cx="1180" cy="590" r="16" fill="#38c6ff" fill-opacity=".22" filter="url(#soft)"/>
+
+  <!-- coins -->
+  <g font-family="'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif" font-weight="700" text-anchor="middle">
+    <g transform="translate(852 908) rotate(-10)">
+      <circle r="30" fill="url(#coinG)" stroke="#ffe9b0" stroke-opacity=".55" stroke-width="1.5"/>
+      <circle r="21" fill="none" stroke="#8a5a00" stroke-opacity=".4" stroke-width="2"/>
+      <text y="9" font-size="26" fill="#7c5200">¥</text>
+    </g>
+    <g transform="translate(948 962) rotate(14)" opacity=".92">
+      <circle r="22" fill="url(#coinG)" stroke="#ffe9b0" stroke-opacity=".5" stroke-width="1.2"/>
+      <circle r="15" fill="none" stroke="#8a5a00" stroke-opacity=".4" stroke-width="1.6"/>
+      <text y="7" font-size="19" fill="#7c5200">¥</text>
+    </g>
+    <g transform="translate(768 966)" opacity=".75">
+      <circle r="15" fill="url(#coinG)"/>
+      <text y="5" font-size="14" fill="#7c5200">¥</text>
+    </g>
+  </g>
+
+  <!-- card: expense donut (upper left) -->
+  <g transform="translate(140 140)" font-family="'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif">
+    <rect width="400" height="300" rx="24" fill="#101a30" fill-opacity=".68" stroke="#ffffff" stroke-opacity=".14" filter="url(#cardShadow)"/>
+    <text x="32" y="46" font-size="19" font-weight="600" fill="#e7eef9">支出分布</text>
+    <text x="368" y="46" font-size="14" fill="#8ca0bc" text-anchor="end">九月</text>
+    <g transform="translate(100 172)">
+      <circle r="56" fill="none" stroke="#ffffff" stroke-opacity=".07" stroke-width="18"/>
+      <g transform="rotate(-90)" stroke-linecap="butt" fill="none" stroke-width="18">
+        <circle r="56" stroke="#3b8bff" stroke-dasharray="143 351.9" stroke-dashoffset="0"/>
+        <circle r="56" stroke="#38c6ff" stroke-dasharray="87.5 351.9" stroke-dashoffset="-147"/>
+        <circle r="56" stroke="#f2c464" stroke-dasharray="59.5 351.9" stroke-dashoffset="-238.5"/>
+        <circle r="56" stroke="#64748b" stroke-dasharray="46 351.9" stroke-dashoffset="-302"/>
+      </g>
+      <text y="2" font-size="20" font-weight="700" fill="#eef4fd" text-anchor="middle">¥12,480</text>
+      <text y="26" font-size="12" fill="#8ca0bc" text-anchor="middle">总支出</text>
+    </g>
+    <g font-size="15" fill="#c7d3e6">
+      <circle cx="200" cy="118" r="5" fill="#3b8bff"/><text x="216" y="123">餐饮 · 42%</text>
+      <circle cx="200" cy="158" r="5" fill="#38c6ff"/><text x="216" y="163">购物 · 26%</text>
+      <circle cx="200" cy="198" r="5" fill="#f2c464"/><text x="216" y="203">交通 · 18%</text>
+      <circle cx="200" cy="238" r="5" fill="#64748b"/><text x="216" y="243">其他 · 14%</text>
+    </g>
+  </g>
+
+  <!-- card: weekly bars (right) -->
+  <g transform="translate(1350 210)" font-family="'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif">
+    <rect width="430" height="330" rx="24" fill="#101a30" fill-opacity=".68" stroke="#ffffff" stroke-opacity=".14" filter="url(#cardShadow)"/>
+    <text x="32" y="46" font-size="19" font-weight="600" fill="#e7eef9">本月收支</text>
+    <g font-size="13" fill="#8ca0bc">
+      <circle cx="292" cy="41" r="4.5" fill="#3b8bff"/><text x="304" y="46">支出</text>
+      <circle cx="352" cy="41" r="4.5" fill="#34d399"/><text x="364" y="46">收入</text>
+    </g>
+    <g stroke="#ffffff" stroke-opacity=".05">
+      <line x1="32" y1="130" x2="398" y2="130"/>
+      <line x1="32" y1="190" x2="398" y2="190"/>
+      <line x1="32" y1="250" x2="398" y2="250"/>
+    </g>
+    <g>
+      <rect x="40"  y="216" width="14" height="64"  rx="4" fill="url(#barGrad)"/><rect x="58"  y="244" width="14" height="36" rx="4" fill="#34d399" fill-opacity=".9"/>
+      <rect x="94"  y="184" width="14" height="96"  rx="4" fill="url(#barGrad)"/><rect x="112" y="226" width="14" height="54" rx="4" fill="#34d399" fill-opacity=".9"/>
+      <rect x="148" y="202" width="14" height="78"  rx="4" fill="url(#barGrad)"/><rect x="166" y="234" width="14" height="46" rx="4" fill="#34d399" fill-opacity=".9"/>
+      <rect x="202" y="160" width="14" height="120" rx="4" fill="url(#barGrad)"/><rect x="220" y="208" width="14" height="72" rx="4" fill="#34d399" fill-opacity=".9"/>
+      <rect x="256" y="192" width="14" height="88"  rx="4" fill="url(#barGrad)"/><rect x="274" y="222" width="14" height="58" rx="4" fill="#34d399" fill-opacity=".9"/>
+      <rect x="310" y="140" width="14" height="140" rx="4" fill="url(#barGrad)"/><rect x="328" y="196" width="14" height="84" rx="4" fill="#34d399" fill-opacity=".9"/>
+      <rect x="364" y="172" width="14" height="108" rx="4" fill="url(#barGrad)"/><rect x="382" y="216" width="14" height="64" rx="4" fill="#34d399" fill-opacity=".9"/>
+    </g>
+    <line x1="32" y1="280" x2="398" y2="280" stroke="#ffffff" stroke-opacity=".14"/>
+    <g font-size="12" fill="#8ca0bc" text-anchor="middle">
+      <text x="56" y="308">一</text><text x="110" y="308">二</text><text x="164" y="308">三</text><text x="218" y="308">四</text><text x="272" y="308">五</text><text x="326" y="308">六</text><text x="380" y="308">日</text>
+    </g>
+  </g>
+
+  <!-- chip: income (lower left) -->
+  <g transform="translate(190 690)" font-family="'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif">
+    <rect width="380" height="104" rx="20" fill="#101a30" fill-opacity=".68" stroke="#ffffff" stroke-opacity=".14" filter="url(#cardShadow)"/>
+    <circle cx="52" cy="52" r="24" fill="#34d399" fill-opacity=".16" stroke="#34d399" stroke-opacity=".45"/>
+    <path d="M52 64 V42 M43 51 l9 -9 9 9" stroke="#34d399" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    <text x="92" y="46" font-size="17" font-weight="600" fill="#e7eef9">工资入账</text>
+    <text x="92" y="70" font-size="13" fill="#8ca0bc">10月01日 · 银行卡</text>
+    <text x="348" y="60" font-size="20" font-weight="700" fill="#34d399" text-anchor="end">+¥6,800.00</text>
+  </g>
+
+  <!-- chip: budget (lower right) -->
+  <g transform="translate(1430 762)" font-family="'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif">
+    <rect width="340" height="120" rx="20" fill="#101a30" fill-opacity=".68" stroke="#ffffff" stroke-opacity=".14" filter="url(#cardShadow)"/>
+    <g transform="translate(58 60)">
+      <circle r="30" fill="none" stroke="#ffffff" stroke-opacity=".08" stroke-width="8"/>
+      <circle r="30" fill="none" stroke="#3b8bff" stroke-width="8" stroke-linecap="round" stroke-dasharray="120.6 188.5" transform="rotate(-90)"/>
+      <text y="5" font-size="15" font-weight="700" fill="#eef4fd" text-anchor="middle">64%</text>
+    </g>
+    <text x="104" y="52" font-size="13" fill="#8ca0bc">月预算已使用</text>
+    <text x="104" y="78" font-size="17" font-weight="600" fill="#e7eef9">剩余 ¥1,120</text>
+  </g>
+</svg>

@@ -1,0 +1,78 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="960" height="640" viewBox="0 0 960 640">
+  <defs>
+    <linearGradient id="bbg" x1="0" y1="0" x2="960" y2="640" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#0b1324"/>
+      <stop offset="1" stop-color="#070d19"/>
+    </linearGradient>
+    <radialGradient id="bglow" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#2f6ee6" stop-opacity=".18"/>
+      <stop offset="1" stop-color="#2f6ee6" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="ringG" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f2c464"/>
+      <stop offset="1" stop-color="#f0873f"/>
+    </linearGradient>
+    <filter id="bshadow" x="-40%" y="-40%" width="180%" height="180%">
+      <feDropShadow dx="0" dy="18" stdDeviation="26" flood-color="#000000" flood-opacity=".42"/>
+    </filter>
+    <filter id="bsoft" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="10"/>
+    </filter>
+    <pattern id="bdots" width="30" height="30" patternUnits="userSpaceOnUse">
+      <circle cx="1.6" cy="1.6" r="1.6" fill="#94b2ff" fill-opacity=".05"/>
+    </pattern>
+  </defs>
+
+  <rect width="960" height="640" fill="url(#bbg)"/>
+  <ellipse cx="240" cy="120" rx="440" ry="300" fill="url(#bglow)"/>
+  <ellipse cx="840" cy="560" rx="380" ry="240" fill="url(#bglow)"/>
+  <rect width="960" height="640" fill="url(#bdots)"/>
+  <g fill="#9dc1ff">
+    <circle cx="700" cy="80" r="2" fill-opacity=".26"/>
+    <circle cx="900" cy="180" r="2.2" fill-opacity=".3"/>
+    <circle cx="80" cy="560" r="2" fill-opacity=".22"/>
+  </g>
+
+  <g transform="translate(80 80)" font-family="'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif">
+    <rect width="800" height="480" rx="24" fill="#101a30" fill-opacity=".72" stroke="#ffffff" stroke-opacity=".13" filter="url(#bshadow)"/>
+    <text x="32" y="48" font-size="19" font-weight="600" fill="#e7eef9">月预算 · 九月</text>
+    <text x="768" y="48" font-size="13" fill="#8ca0bc" text-anchor="end">09.01 – 09.30</text>
+
+    <line x1="420" y1="90" x2="420" y2="430" stroke="#ffffff" stroke-opacity=".08"/>
+
+    <!-- big progress ring 72% -->
+    <g transform="translate(226 240)">
+      <circle r="105" fill="none" stroke="#f2c464" stroke-opacity=".14" stroke-width="26" filter="url(#bsoft)"/>
+      <circle r="105" fill="none" stroke="#ffffff" stroke-opacity=".07" stroke-width="26"/>
+      <circle r="105" fill="none" stroke="url(#ringG)" stroke-width="26" stroke-linecap="round" stroke-dasharray="475 659.7" transform="rotate(-90)"/>
+      <text y="-2" font-size="42" font-weight="700" fill="#f6d488" text-anchor="middle">72%</text>
+      <text y="32" font-size="14.5" fill="#8ca0bc" text-anchor="middle">¥2,880 / ¥4,000</text>
+    </g>
+    <g>
+      <rect x="146" y="392" width="160" height="34" rx="17" fill="#f2c464" fill-opacity=".12" stroke="#f2c464" stroke-opacity=".4"/>
+      <path d="M168 410 l5.5 -9.5 5.5 9.5 z" fill="#f2c464"/>
+      <text x="236" y="414" font-size="13.5" fill="#f6d488" text-anchor="middle" font-weight="600">接近上限 · 80%</text>
+    </g>
+
+    <!-- category sub-budgets -->
+    <text x="460" y="104" font-size="15" font-weight="600" fill="#c7d3e6">分预算（按类别）</text>
+    <!-- row 1 -->
+    <text x="460" y="160" font-size="16" fill="#e7eef9">餐饮</text>
+    <text x="772" y="160" font-size="14" fill="#8ca0bc" text-anchor="end">¥1,720 / ¥2,000</text>
+    <rect x="460" y="176" width="312" height="10" rx="5" fill="#ffffff" fill-opacity=".07"/>
+    <rect x="460" y="176" width="268" height="10" rx="5" fill="url(#ringG)"/>
+    <!-- row 2 -->
+    <text x="460" y="248" font-size="16" fill="#e7eef9">交通</text>
+    <text x="772" y="248" font-size="14" fill="#8ca0bc" text-anchor="end">¥340 / ¥1,000</text>
+    <rect x="460" y="264" width="312" height="10" rx="5" fill="#ffffff" fill-opacity=".07"/>
+    <rect x="460" y="264" width="106" height="10" rx="5" fill="#3b8bff"/>
+    <!-- row 3 (over budget) -->
+    <text x="460" y="336" font-size="16" fill="#e7eef9">购物</text>
+    <text x="772" y="336" font-size="14" fill="#f87171" text-anchor="end" font-weight="600">¥1,080 / ¥1,000 · 超支</text>
+    <rect x="460" y="352" width="312" height="10" rx="5" fill="#ffffff" fill-opacity=".07"/>
+    <rect x="460" y="352" width="312" height="10" rx="5" fill="#f87171"/>
+    <rect x="460" y="348" width="6" height="18" rx="3" fill="#fca5a5"/>
+
+    <text x="460" y="426" font-size="13" fill="#8ca0bc">进度三态：正常 → 接近 80% 转橙 → 超支变红</text>
+  </g>
+</svg>
