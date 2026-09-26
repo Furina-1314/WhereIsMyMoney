@@ -20,7 +20,10 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  scroll-snap-type: y mandatory;
+}
 
 body {
   background: var(--bg);
@@ -205,10 +208,19 @@ ul { list-style: none; }
 }
 .scroll-hint:hover { color: var(--text); }
 
-/* ---------- 巨幕分屏（中左 / 中右交替） ---------- */
+/* ---------- 巨幕分屏（占满一屏，滚动逐屏切换） ---------- */
+.hero,
+.screen,
+.why,
+.download {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+}
+.footer { scroll-snap-align: end; }
+
 .screen {
   position: relative;
-  min-height: 92vh;
+  min-height: 100svh;
   display: flex;
   align-items: center;
   overflow: hidden;
@@ -219,7 +231,24 @@ ul { list-style: none; }
   z-index: -2;
   width: 100%;
   height: 100%;
+  max-width: none;
   object-fit: cover;
+}
+/* 桌面端构图：人物让开文案一侧 */
+.bg-hero   { object-position: 68% 30%; }
+.bg-ledger { object-position: left center; }
+.bg-stats  { object-position: center; }
+.bg-budget { object-position: left center; }
+.bg-local  { object-position: right center; }
+/* 16:9 视口下 3:2 图按宽铺满，横向 object-position 失效——
+   加宽图片盒并右锚定，把人物推向左侧文字对侧 */
+@media (min-width: 961px) {
+  .bg-local {
+    width: 118%;
+    height: 100%;
+    left: auto;
+    right: 0;
+  }
 }
 .screen-scrim { position: absolute; inset: 0; z-index: -1; }
 .screen-left .screen-scrim {
@@ -373,7 +402,13 @@ ul { list-style: none; }
 @media (max-width: 960px) {
   .why-grid { grid-template-columns: repeat(2, 1fr); }
   .nav-links { display: none; }
-  .screen { min-height: 88vh; }
+  .screen { min-height: 100svh; }
+  /* 移动端构图：让画面里的人物都进入镜头 */
+  .bg-hero   { object-position: 70% 20%; }
+  .bg-ledger { object-position: 33% center; }
+  .bg-stats  { object-position: 62% center; }
+  .bg-budget { object-position: 50% center; }
+  .bg-local  { object-position: 53% center; }
   .screen-scrim, .hero-scrim {
     background: linear-gradient(0deg,
       rgba(var(--scrim), .95) 0%,
